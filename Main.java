@@ -67,32 +67,45 @@ if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getItemInHand().ge
 @EventHandler
 public void nobreak(BlockBreakEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
-	if(!jefaso.equals("")){e.setCancelled(true);}
-	if(jefaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}
+	if(!jefaso.equals("")){
+		if(!jefaso.equals(e.getPlayer().getName())){
+			e.getPlayer().sendMessage("no puedes romper aca pertenece a " + jefaso);
+			e.setCancelled(true);}
+	if(jefaso.equals(e.getPlayer().getName())){e.setCancelled(false);}
+	}}
 @EventHandler
 public void noplace(BlockPlaceEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
-	if(!jefaso.equals("")){e.setCancelled(true);}
-	if(jefaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}
+	if(!jefaso.equals(""))
+	{if(!jefaso.equals(e.getPlayer().getName())){
+		e.setCancelled(true);
+		e.getPlayer().sendMessage("no puedes poner bloques aca pertenece a " + jefaso);
+	}
+	if(jefaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}
 @EventHandler
 public void nouse(PlayerInteractEvent e){
 	if(e.getClickedBlock() != null) {
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getClickedBlock().getChunk().getX()) + "." + String.valueOf(e.getClickedBlock().getChunk().getZ()), "").toLowerCase();
 	if(!jefaso.equals("")){
+		if(!jefaso.equals(e.getPlayer().getName())){
 		if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
 			Material b = e.getClickedBlock().getType();
 			if ((b == Material.DISPENSER) || (b == Material.FENCE_GATE) || (b == Material.DROPPER) || (b == Material.HOPPER) || (b == Material.BEACON) || (b == Material.ANVIL) ||  (b == Material.BREWING_STAND) || (b == Material.JUKEBOX) || (b == Material.FURNACE) || (b == Material.CHEST) || (b == Material.LEVER) || (b == Material.WOODEN_DOOR) || (b == Material.STONE_BUTTON) || (b == Material.WOOD_BUTTON) || (b == Material.TRAP_DOOR)){
 		e.setCancelled(true);
+		e.getPlayer().sendMessage("no puedes usar cosas aca pertenece a " + jefaso);
 		}}}
 	if(jefaso.equals(e.getPlayer().getName())){e.setCancelled(false);}
-	}}
+	}}}
 @EventHandler
 public void nobaldes(PlayerBucketEmptyEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlockClicked().getChunk().getX()) + "." + String.valueOf(e.getBlockClicked().getChunk().getZ()), "").toLowerCase();
 	if(!jefaso.equals("")){
-e.setCancelled(true);	}
+		if(!jefaso.equals(e.getPlayer().getName())){
+		e.setCancelled(true);	
+		e.getPlayer().sendMessage("no puedes poner agua o lava aca, pertenece a " + jefaso);
+		}
 	if(jefaso.equals(e.getPlayer().getName())){e.setCancelled(false);}
-}
+}}
 
 }
 

@@ -18,18 +18,45 @@ getConfig().options().copyDefaults(true);
 saveConfig();}
 @EventHandler
 public void select(PlayerInteractEvent e){
+	if(e.getClickedBlock() != null) {
 if(e.getAction() == Action.LEFT_CLICK_BLOCK && e.getPlayer().getItemInHand().getType() == Material.BOOK){
 	int chunkx = e.getClickedBlock().getLocation().getChunk().getX();
 	int chunkz = e.getClickedBlock().getLocation().getChunk().getZ();
+	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getClickedBlock().getChunk().getX()) + "." + String.valueOf(e.getClickedBlock().getChunk().getZ()), "").toLowerCase();
+	if(jefaso.equals("")){
 	getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), e.getPlayer().getName());
 	saveConfig();	
-	e.getPlayer().sendMessage(ChatColor.GREEN + "Este chunk ahora es tuyo " + e.getPlayer().getName());}
+	e.getPlayer().sendMessage(ChatColor.GREEN + "Este chunk ahora es tuyo " + e.getPlayer().getName());
+	}
+if(!jefaso.equals("")){
+		e.getPlayer().sendMessage("Este chunk es de " + jefaso + " no puedes registrarlo.");
+	}
+if(jefaso.equals(e.getPlayer().getName())){
+	e.getPlayer().sendMessage("Este chunk ya es tuyo");
+	
+}
+	}
+
 if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getItemInHand().getType() == Material.BOOK){
 	int chunkx = e.getClickedBlock().getLocation().getChunk().getX();
 	int chunkz = e.getClickedBlock().getLocation().getChunk().getZ();
+	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getClickedBlock().getChunk().getX()) + "." + String.valueOf(e.getClickedBlock().getChunk().getZ()), "").toLowerCase();
+	
+	if(jefaso.equals(e.getPlayer().getName())){
 	getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
 	saveConfig();
-	e.getPlayer().sendMessage(ChatColor.RED + "Chunk desprotegido");}}
+	e.getPlayer().sendMessage(ChatColor.RED + "Chunk desprotegido");
+	}
+	if(!jefaso.equals("")){
+		e.getPlayer().sendMessage("Este chunk es de " + jefaso);
+	}
+	if(jefaso.equals("")){
+		e.getPlayer().sendMessage("Este chunk no esta protegido");
+	}
+	
+	
+}
+}}
 @EventHandler
 public void nobreak(BlockBreakEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();

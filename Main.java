@@ -23,13 +23,13 @@ if(e.getAction() == Action.LEFT_CLICK_BLOCK && e.getPlayer().getItemInHand().get
 	int chunkz = e.getClickedBlock().getLocation().getChunk().getZ();
 	getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), e.getPlayer().getName());
 	saveConfig();	
-	e.getPlayer().sendMessage(ChatColor.GREEN + "Zona Protegida Por " + e.getPlayer().getName());}
+	e.getPlayer().sendMessage(ChatColor.GREEN + "Este chunk ahora es tuyo " + e.getPlayer().getName());}
 if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getItemInHand().getType() == Material.BOOK){
 	int chunkx = e.getClickedBlock().getLocation().getChunk().getX();
 	int chunkz = e.getClickedBlock().getLocation().getChunk().getZ();
 	getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
 	saveConfig();
-	e.getPlayer().sendMessage(ChatColor.RED + "Zona Desprotegida");}}
+	e.getPlayer().sendMessage(ChatColor.RED + "Chunk desprotegido");}}
 @EventHandler
 public void nobreak(BlockBreakEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();

@@ -42,16 +42,16 @@ public void noplace(BlockPlaceEvent e){
 	if(jefaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}
 @EventHandler
 public void nouse(PlayerInteractEvent e){
+	if(e.getClickedBlock() != null) {
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getClickedBlock().getChunk().getX()) + "." + String.valueOf(e.getClickedBlock().getChunk().getZ()), "").toLowerCase();
 	if(!jefaso.equals("")){
-		if ((e.getAction().equals(Action.LEFT_CLICK_BLOCK)) || (e.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
-		@SuppressWarnings("deprecation")
-		int b = e.getClickedBlock().getTypeId();
-		if ((b == 390) || (b == 23) || (b == 107) || (b == 158) || (b == 154) || (b == 138) || (b == 145) || (b == 118) || (b == 380) || (b == 117) || (b == 379) || (b == 84) || (b == 61) || (b == 54) || (b == 69) || (b == 64) || (b == 77) || (b == 143) || (b == 96) || (b == 107)){
+		if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
+			Material b = e.getClickedBlock().getType();
+			if ((b == Material.DISPENSER) || (b == Material.FENCE_GATE) || (b == Material.DROPPER) || (b == Material.HOPPER) || (b == Material.BEACON) || (b == Material.ANVIL) ||  (b == Material.BREWING_STAND) || (b == Material.JUKEBOX) || (b == Material.FURNACE) || (b == Material.CHEST) || (b == Material.LEVER) || (b == Material.WOODEN_DOOR) || (b == Material.STONE_BUTTON) || (b == Material.WOOD_BUTTON) || (b == Material.TRAP_DOOR)){
 		e.setCancelled(true);
-		}
-	if(jefaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}	
-}}
+		}}}
+	if(jefaso.equals(e.getPlayer().getName())){e.setCancelled(false);}
+	}}
 @EventHandler
 public void nobaldes(PlayerBucketEmptyEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlockClicked().getChunk().getX()) + "." + String.valueOf(e.getBlockClicked().getChunk().getZ()), "").toLowerCase();

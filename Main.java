@@ -19,62 +19,25 @@ getServer().getPluginManager().registerEvents(this, this);
 getConfig().options().copyDefaults(true);
 saveConfig();}
 @EventHandler
-public void select(PlayerInteractEvent e){
-	if(e.getClickedBlock() != null) {
-if(e.getAction() == Action.LEFT_CLICK_BLOCK && e.getPlayer().getItemInHand().getType() == Material.BOOK){
-	int chunkx = e.getClickedBlock().getLocation().getChunk().getX();
-	int chunkz = e.getClickedBlock().getLocation().getChunk().getZ();
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getClickedBlock().getChunk().getX()) + "." + String.valueOf(e.getClickedBlock().getChunk().getZ()), "").toLowerCase();
-	if(jefaso.equals("")){
-	getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), e.getPlayer().getName());
-	saveConfig();	
-	e.getPlayer().sendMessage(ChatColor.GREEN + "Chunk protegido exitosamente, ahora pertenece a: " + e.getPlayer().getName());}
-if(!jefaso.equals("")){
-	if(jefaso.equals(e.getPlayer().getName())){
-		e.getPlayer().sendMessage(ChatColor.GREEN + "Este chunk ya te pertenece");}
-	if(!jefaso.equals(e.getPlayer().getName())){
-		e.getPlayer().sendMessage(ChatColor.DARK_RED + "Este chunk es de " + jefaso + ".");
-	}}}
-if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getItemInHand().getType() == Material.BOOK){
-	int chunkx = e.getClickedBlock().getLocation().getChunk().getX();
-	int chunkz = e.getClickedBlock().getLocation().getChunk().getZ();
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getClickedBlock().getChunk().getX()) + "." + String.valueOf(e.getClickedBlock().getChunk().getZ()), "").toLowerCase();
-	if(!jefaso.equals("")){
-		if(jefaso.equals(e.getPlayer().getName())){
-			getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
-			saveConfig();
-			e.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "Has borrado exitosamente este chunk.");}
-		if(!jefaso.equals(e.getPlayer().getName())){
-			e.getPlayer().sendMessage(ChatColor.DARK_RED + "este chunk es de " + jefaso + ".");}}
-	if(jefaso.equals("")){
-		e.getPlayer().sendMessage(ChatColor.YELLOW + "Este chunk esta libre.");}}}}
-@EventHandler
 public void nobreak(BlockBreakEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
-
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(e.getPlayer().getName())){
 			if(!amigaso.equals(e.getPlayer().getName())){
 				e.setCancelled(true);
-				e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para romper.");
-			}
-		}
+				e.getPlayer().sendMessage(ChatColor.RED + "Can not break on " + jefaso + " chunk.");}}
 	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}
-if(jefaso.equals("")){e.setCancelled(false);}	
-}
+if(jefaso.equals("")){e.setCancelled(false);}}
 @EventHandler
 public void noplace(BlockPlaceEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
-
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(e.getPlayer().getName())){
 			if(!amigaso.equals(e.getPlayer().getName())){
 				e.setCancelled(true);
-				e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para construir.");
-			}
-		}
+				e.getPlayer().sendMessage(ChatColor.RED + "Can not build on " + jefaso + " land.");}}
 	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}
 @EventHandler
 public void nouse(PlayerInteractEvent e){
@@ -83,20 +46,13 @@ public void nouse(PlayerInteractEvent e){
 	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(e.getPlayer().getName())){
-			if(!amigaso.equals(e.getPlayer().getName())){
-	
+			if(!amigaso.equals(e.getPlayer().getName())){	
 if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
 Material b = e.getClickedBlock().getType();
-			if ((b == Material.DISPENSER) || (b == Material.FENCE_GATE) || (b == Material.DROPPER) || (b == Material.HOPPER) || (b == Material.BEACON) || (b == Material.ANVIL) ||  (b == Material.BREWING_STAND) || (b == Material.JUKEBOX) || (b == Material.FURNACE) || (b == Material.CHEST) || (b == Material.LEVER) || (b == Material.WOODEN_DOOR) || (b == Material.STONE_BUTTON) || (b == Material.WOOD_BUTTON) || (b == Material.TRAP_DOOR)){
-
-				
+			if ((b == Material.DISPENSER) || (b == Material.FENCE_GATE) || (b == Material.DROPPER) || (b == Material.HOPPER) || (b == Material.BEACON) || (b == Material.ANVIL) ||  (b == Material.BREWING_STAND) || (b == Material.JUKEBOX) || (b == Material.FURNACE) || (b == Material.CHEST) || (b == Material.LEVER) || (b == Material.WOODEN_DOOR) || (b == Material.STONE_BUTTON) || (b == Material.WOOD_BUTTON) || (b == Material.TRAP_DOOR)){	
 		e.setCancelled(true);
-		e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para usar.");
-		
-			}}}}
+		e.getPlayer().sendMessage(ChatColor.RED + "Can not use that on " + jefaso + " land.");}}}}
 		if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}}
-
-
 @EventHandler
 public void nobaldes(PlayerBucketEmptyEvent e){
 String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlockClicked().getChunk().getX()) + "." + String.valueOf(e.getBlockClicked().getChunk().getZ()), "").toLowerCase();
@@ -105,64 +61,69 @@ if(!jefaso.equals("")){
 	if(!jefaso.equals(e.getPlayer().getName())){
 		if(!amigaso.equals(e.getPlayer().getName())){
 			e.setCancelled(true);
-			e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para poner baldes.");
-		}}
+			e.getPlayer().sendMessage(ChatColor.RED + "Can not use buckets on " + jefaso + " land.");}}
 if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}
-
 @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-	
-	if(sender instanceof Player)	{
+	if(sender instanceof Player){
 		Player p = (Player)sender;
 		if(command.getName().equalsIgnoreCase("invite")){
 			if(args.length == 0){
-				p.sendMessage("a que jugador quieres invitar?");
+				p.sendMessage("Add the name of the player?");
 				return false;
 			}if(args.length == 1){
 				getConfig().set("friends." + p.getName() + "." + args[0], args[0]);
 				saveConfig();
-				p.sendMessage("Amigo " + args[0] + " agregado");
+				p.sendMessage("Friend " + args[0] + " Added to your chunks");
 			}if(args.length >= 2){
-				p.sendMessage("solo puedes invitar de 1 a 1");
-				return false;
-			}
-		}if(command.getName().equalsIgnoreCase("uninvite")){
+				p.sendMessage("You may invite one by one");
+				return false;}}
+		if(command.getName().equalsIgnoreCase("tpto")){
 			if(args.length == 0){
-				p.sendMessage("a que jugador quieres desinvitar?");
+				p.sendMessage("/tpto set chunk1 -o- /tpto tp chunk1");
+				return false;
+			}if(args.length == 1){
+				p.sendMessage("/tpto set chunk1 -o- /tpto tp chunk1");
+				return false;
+			}if(args.length == 2){
+				if(args[0].equalsIgnoreCase("set")){
+					getConfig().set("teleport." + args[1] + "." + args[1], p.getPlayer().getLocation().getX() + "." + p.getLocation().getZ());
+					saveConfig();
+					p.sendMessage("teleport " + args[1] + " establecido");}
+				if(args[0].equalsIgnoreCase("tp")){
+					p.sendMessage("Working on this feature.");}}
+				if(args.length >= 3){
+					p.sendMessage("/tpto set chunk1 -o- /tpto tp chunk1");
+					return false;}}
+		if(command.getName().equalsIgnoreCase("uninvite")){
+			if(args.length == 0){
+				p.sendMessage("Add the player to be remove?");
 				return false;
 			}if(args.length == 1){
 				getConfig().set("friends." + p.getName() + "." + args[0], "");
 				saveConfig();
-				p.sendMessage("Amigo " + args[0] + " borrado");
+				p.sendMessage("Player " + args[0] + " removed");
 			}if(args.length >= 2){
-				p.sendMessage("solo puedes desinvitar de 1 a 1");
-				return false;
-			}
+				p.sendMessage("You may remove one by one");
+				return false;}
 		}if(command.getName().equalsIgnoreCase("claim")){
 			if(args.length == 0){
-				
 				int chunkx = p.getLocation().getChunk().getX();
 				int chunkz = p.getLocation().getChunk().getZ();
 				String jefaso = getConfig().getString("chunk." + String.valueOf(p.getLocation().getChunk().getX()) + "." + String.valueOf(p.getLocation().getChunk().getZ()), "").toLowerCase();
 				if(jefaso.equals("")){
 				getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), p.getPlayer().getName());
 				saveConfig();	
-				p.getPlayer().sendMessage(ChatColor.GREEN + "Chunk protegido exitosamente, ahora pertenece a: " + p.getPlayer().getName());}
+				p.getPlayer().sendMessage(ChatColor.GREEN + "This Chunk has new owner: " + p.getPlayer().getName());}
 			if(!jefaso.equals("")){
 				if(jefaso.equals(p.getPlayer().getName())){
-					p.getPlayer().sendMessage(ChatColor.GREEN + "Este chunk ya te pertenece");}
+					p.getPlayer().sendMessage(ChatColor.GREEN + "This chunk is already yours");}
 				if(!jefaso.equals(p.getPlayer().getName())){
-					p.getPlayer().sendMessage(ChatColor.DARK_RED + "Este chunk es de " + jefaso + ".");
-				}}}
-				
-				
+					p.getPlayer().sendMessage(ChatColor.DARK_RED + "This chunk is taken by " + jefaso + ".");}}}
 			if(args.length >= 1){
-				p.sendMessage("solo pon /claim");
-			}
-			}
+				p.sendMessage("just one command /claim");}}
 		if(command.getName().equalsIgnoreCase("unclaim")){
 			if(args.length == 0){
-				
 				int chunkx = p.getLocation().getChunk().getX();
 				int chunkz = p.getLocation().getChunk().getZ();
 				String jefaso = getConfig().getString("chunk." + String.valueOf(p.getLocation().getChunk().getX()) + "." + String.valueOf(p.getLocation().getChunk().getZ()), "").toLowerCase();
@@ -170,22 +131,12 @@ if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getNam
 					if(jefaso.equals(p.getPlayer().getName())){
 						getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
 						saveConfig();
-						p.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "Has borrado exitosamente este chunk.");}
+						p.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "Chunk successfuly removed.");}
 					if(!jefaso.equals(p.getPlayer().getName())){
-						p.getPlayer().sendMessage(ChatColor.DARK_RED + "este chunk es de " + jefaso + ".");}}
+						p.getPlayer().sendMessage(ChatColor.DARK_RED + "This chunk belongs to " + jefaso + ".");}}
 				if(jefaso.equals("")){
-					p.getPlayer().sendMessage(ChatColor.YELLOW + "Este chunk esta libre.");}
-				
-				
+					p.getPlayer().sendMessage(ChatColor.YELLOW + "This is a free chunk.");}
 				return false;
 			}if(args.length >= 1){
-				p.sendMessage("solo usa /unclaim");
-			}
-		}
-		
-	}
-	
-		return true;
-	}
-
-}
+				p.sendMessage("just one command /unclaim");
+			}}}return true;}}

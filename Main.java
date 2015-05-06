@@ -109,6 +109,18 @@ public void nobaldes(PlayerBucketEmptyEvent e){
 				p.sendMessage("solo puedes invitar de 1 a 1");
 				return false;
 			}
+		}if(command.getName().equalsIgnoreCase("uninvite")){
+			if(args.length == 0){
+				p.sendMessage("a que jugador quieres desinvitar?");
+				return false;
+			}if(args.length == 1){
+				getConfig().set("friends." + p.getName() + "." + args[0], "");
+				saveConfig();
+				p.sendMessage("Amigo " + args[0] + " borrado");
+			}if(args.length >= 2){
+				p.sendMessage("solo puedes desinvitar de 1 a 1");
+				return false;
+			}
 		}
 		
 	}

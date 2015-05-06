@@ -51,47 +51,64 @@ if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getItemInHand().ge
 @EventHandler
 public void nobreak(BlockBreakEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
-	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();
-	if(!jefaso.equals("") || !amigaso.equals("")){
-		if(!(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName()))){
-			e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para romper.");
-			e.setCancelled(true);}
-	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}
-	}}
+	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
+
+	if(!jefaso.equals("")){
+		if(!jefaso.equals(e.getPlayer().getName())){
+			if(!amigaso.equals(e.getPlayer().getName())){
+				e.setCancelled(true);
+				e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para romper.");
+			}
+		}
+	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}
+if(jefaso.equals("")){e.setCancelled(false);}	
+}
 @EventHandler
 public void noplace(BlockPlaceEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
-	if(!jefaso.equals("") || !amigaso.equals(""))
-	{if(!(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName()))){
-		e.setCancelled(true);
-		e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para construir.");
-	}
+
+	if(!jefaso.equals("")){
+		if(!jefaso.equals(e.getPlayer().getName())){
+			if(!amigaso.equals(e.getPlayer().getName())){
+				e.setCancelled(true);
+				e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para construir.");
+			}
+		}
 	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}
 @EventHandler
 public void nouse(PlayerInteractEvent e){
 	if(e.getClickedBlock() != null) {
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getClickedBlock().getChunk().getX()) + "." + String.valueOf(e.getClickedBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
-	if(!jefaso.equals("") || !amigaso.equals("")){
-		if(!(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName()))){
-		if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
-			Material b = e.getClickedBlock().getType();
+	if(!jefaso.equals("")){
+		if(!jefaso.equals(e.getPlayer().getName())){
+			if(!amigaso.equals(e.getPlayer().getName())){
+	
+if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
+Material b = e.getClickedBlock().getType();
 			if ((b == Material.DISPENSER) || (b == Material.FENCE_GATE) || (b == Material.DROPPER) || (b == Material.HOPPER) || (b == Material.BEACON) || (b == Material.ANVIL) ||  (b == Material.BREWING_STAND) || (b == Material.JUKEBOX) || (b == Material.FURNACE) || (b == Material.CHEST) || (b == Material.LEVER) || (b == Material.WOODEN_DOOR) || (b == Material.STONE_BUTTON) || (b == Material.WOOD_BUTTON) || (b == Material.TRAP_DOOR)){
+
+				
 		e.setCancelled(true);
 		e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para usar.");
-		}}}
-	if((jefaso.equals(e.getPlayer().getName())) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}
-	}}}
+		
+			}}}}
+		if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}}
+
+
 @EventHandler
 public void nobaldes(PlayerBucketEmptyEvent e){
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlockClicked().getChunk().getX()) + "." + String.valueOf(e.getBlockClicked().getChunk().getZ()), "").toLowerCase();
-	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
-	if(!jefaso.equals("") || !amigaso.equals("")){
-		if(!(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName()))){
-		e.setCancelled(true);	
-		e.getPlayer().sendMessage(ChatColor.RED + "nesecitas permiso de " + jefaso + " para poner baldes.");}
-	if((jefaso.equals(e.getPlayer().getName())) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}
+String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlockClicked().getChunk().getX()) + "." + String.valueOf(e.getBlockClicked().getChunk().getZ()), "").toLowerCase();
+String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
+if(!jefaso.equals("")){
+	if(!jefaso.equals(e.getPlayer().getName())){
+		if(!amigaso.equals(e.getPlayer().getName())){
+			e.setCancelled(true);
+			e.getPlayer().sendMessage(ChatColor.RED + "Nesecitas permiso de " + jefaso + " para poner baldes.");
+		}}
+if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}
+
 @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	
@@ -120,6 +137,49 @@ public void nobaldes(PlayerBucketEmptyEvent e){
 			}if(args.length >= 2){
 				p.sendMessage("solo puedes desinvitar de 1 a 1");
 				return false;
+			}
+		}if(command.getName().equalsIgnoreCase("claim")){
+			if(args.length == 0){
+				
+				int chunkx = p.getLocation().getChunk().getX();
+				int chunkz = p.getLocation().getChunk().getZ();
+				String jefaso = getConfig().getString("chunk." + String.valueOf(p.getLocation().getChunk().getX()) + "." + String.valueOf(p.getLocation().getChunk().getZ()), "").toLowerCase();
+				if(jefaso.equals("")){
+				getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), p.getPlayer().getName());
+				saveConfig();	
+				p.getPlayer().sendMessage(ChatColor.GREEN + "Chunk protegido exitosamente, ahora pertenece a: " + p.getPlayer().getName());}
+			if(!jefaso.equals("")){
+				if(jefaso.equals(p.getPlayer().getName())){
+					p.getPlayer().sendMessage(ChatColor.GREEN + "Este chunk ya te pertenece");}
+				if(!jefaso.equals(p.getPlayer().getName())){
+					p.getPlayer().sendMessage(ChatColor.DARK_RED + "Este chunk es de " + jefaso + ".");
+				}}}
+				
+				
+			if(args.length >= 1){
+				p.sendMessage("solo pon /claim");
+			}
+			}
+		if(command.getName().equalsIgnoreCase("unclaim")){
+			if(args.length == 0){
+				
+				int chunkx = p.getLocation().getChunk().getX();
+				int chunkz = p.getLocation().getChunk().getZ();
+				String jefaso = getConfig().getString("chunk." + String.valueOf(p.getLocation().getChunk().getX()) + "." + String.valueOf(p.getLocation().getChunk().getZ()), "").toLowerCase();
+				if(!jefaso.equals("")){
+					if(jefaso.equals(p.getPlayer().getName())){
+						getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
+						saveConfig();
+						p.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "Has borrado exitosamente este chunk.");}
+					if(!jefaso.equals(p.getPlayer().getName())){
+						p.getPlayer().sendMessage(ChatColor.DARK_RED + "este chunk es de " + jefaso + ".");}}
+				if(jefaso.equals("")){
+					p.getPlayer().sendMessage(ChatColor.YELLOW + "Este chunk esta libre.");}
+				
+				
+				return false;
+			}if(args.length >= 1){
+				p.sendMessage("solo usa /unclaim");
 			}
 		}
 		

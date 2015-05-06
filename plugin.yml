@@ -1,0 +1,8 @@
+name: blockguard
+main: com.craftilandia.blockguard.Main
+version: 1.0
+commands:
+    invite:
+        description: agrega amigos para que puedan usar tus chunks
+    uninvite:
+        description: agrega amigos para que puedan usar tus chunks

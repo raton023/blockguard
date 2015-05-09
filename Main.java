@@ -1,4 +1,6 @@
 package com.craftilandia.blockguard;
+import java.util.Date;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -6,15 +8,21 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Creeper;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -72,7 +80,6 @@ if(!jefaso.equals("")){
 			e.setCancelled(true);
 			e.getPlayer().sendMessage(ChatColor.RED + "Can not use buckets on " + jefaso + " land.");}}
 if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}
-
 @EventHandler
 public void damage(EntityDamageByEntityEvent e){	
 	if (e.getEntity() instanceof Animals || e.getEntity() instanceof Villager){
@@ -102,10 +109,9 @@ public void damage(EntityDamageByEntityEvent e){
 				if(jefaso.equals(intruso.getPlayer().getName()) || amigaso.equals(intruso.getPlayer().getName())){e.setCancelled(false);}}
 				}}
 	
-	if (e.getDamager() instanceof Player) {
-        Player p = (Player)e.getDamager();
-		if (e.getEntity() instanceof ItemFrame) {
-			
+	if (e.getEntity() instanceof ItemFrame) {
+		if (e.getDamager() instanceof Player) {
+			Player p = (Player)e.getDamager();
 			String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
 			String amigaso = getConfig().getString("friends." + jefaso + "." + p.getName(), "").toLowerCase();	
 			if(!jefaso.equals("")){
@@ -113,15 +119,9 @@ public void damage(EntityDamageByEntityEvent e){
 					if(!amigaso.equals(p.getName())){
 						e.setCancelled(true);
 						p.sendMessage(ChatColor.RED + "that frame belongs to " + jefaso + ".");}}
-			if(jefaso.equals(p.getName()) || amigaso.equals(p.getName())){e.setCancelled(false);}}
-			
-			
-        } 
-    }
-	
-}
-
-
+			if(jefaso.equals(p.getName()) || amigaso.equals(p.getName())){e.setCancelled(false);}}} 
+		if (e.getDamager() instanceof Creeper || e.getDamager() instanceof Arrow || e.getDamager() instanceof TNTPrimed) {
+						e.setCancelled(true);}}}
 @EventHandler
 public void crearcartel(HangingPlaceEvent e){
 	Player p = e.getPlayer();
@@ -158,16 +158,55 @@ if(e.getPlayer() instanceof Player){
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(e.getPlayer().getName())){
 			if(!amigaso.equals(e.getPlayer().getName())){
-				
 				e.setCancelled(true);
 				e.getPlayer().sendMessage(ChatColor.RED + "that frame belongs to " + jefaso + ".");}}
-	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}
-	}	
+	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}}}
+@EventHandler
+public void pistones(BlockPistonExtendEvent e){
+	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
+	if(jefaso.isEmpty()){
+	e.setCancelled(true);
+	}
+	if(!jefaso.isEmpty()){Date date = new Date();
+		getServer().getLogger().config(date + " " + e.getBlock().getChunk().getX() + " " + e.getBlock().getChunk().getZ() + " used on " + jefaso + " lands.");
+	}
+	}
+@EventHandler
+public void incendio(BlockBurnEvent e){
+	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
+if(jefaso.isEmpty()){
+e.setCancelled(false);	
 }
+if(!jefaso.isEmpty()){
+e.setCancelled(true);
+}
+	
+}
+@EventHandler
+public void blockprotecttnt(EntityExplodeEvent e){
+	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getChunk().getZ()), "").toLowerCase();
+	if(e.getEntity() instanceof Creeper){
+		if(jefaso.isEmpty()){
+	e.setCancelled(false);	
+	}
+	if(!jefaso.isEmpty()){
+	e.setCancelled(true);
+	}
+	}
+	if(e.getEntity() instanceof TNTPrimed){
+		if(jefaso.isEmpty()){
+	e.setCancelled(true);	
+	}
+	if(!jefaso.isEmpty()){
+	e.setCancelled(false);}}
+	}
 
-}
+
+
+
+
 @Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	if(sender instanceof Player){
 		Player p = (Player)sender;
 		
@@ -269,6 +308,7 @@ if(e.getPlayer() instanceof Player){
 					}
 					getConfig().set("counter." + p.getPlayer().getName(), contar +1);
 					getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), p.getPlayer().getName());
+					getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), args[1]);
 					saveConfig();	
 				int altura = p.getLocation().getBlockY();
 				Block block1 = p.getLocation().getChunk().getBlock(0, altura+2, 0);
@@ -288,8 +328,8 @@ if(e.getPlayer() instanceof Player){
 					p.getPlayer().sendMessage(ChatColor.YELLOW + "This chunk is already yours");}
 				if(!jefaso.equals(p.getPlayer().getName())){
 					p.getPlayer().sendMessage(ChatColor.DARK_RED + "This chunk is taken by " + jefaso + ".");}}}
-			if(args.length >= 2){
-				p.sendMessage(ChatColor.DARK_RED + "/bg claim");}}
+			if(args.length >= 3){
+				p.sendMessage(ChatColor.DARK_RED + "/bg claim name");}}
 		if(args[0].equalsIgnoreCase("unclaim")){
 			if(args.length == 1){
 				int chunkx = p.getLocation().getChunk().getX();

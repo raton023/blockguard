@@ -6,6 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -14,7 +15,10 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements Listener {
@@ -52,7 +56,7 @@ public void nouse(PlayerInteractEvent e){
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(e.getPlayer().getName())){
 			if(!amigaso.equals(e.getPlayer().getName())){	
-if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK))){
+if ((e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.LEFT_CLICK_BLOCK))){
 Material b = e.getClickedBlock().getType();
 			if ((b == Material.DISPENSER) || (b == Material.FENCE_GATE) || (b == Material.DROPPER) || (b == Material.HOPPER) || (b == Material.BEACON) || (b == Material.ANVIL) ||  (b == Material.BREWING_STAND) || (b == Material.JUKEBOX) || (b == Material.FURNACE) || (b == Material.CHEST) || (b == Material.LEVER) || (b == Material.WOODEN_DOOR) || (b == Material.STONE_BUTTON) || (b == Material.WOOD_BUTTON) || (b == Material.TRAP_DOOR)){	
 		e.setCancelled(true);
@@ -96,11 +100,72 @@ public void damage(EntityDamageByEntityEvent e){
 							e.setCancelled(true);
 							intruso.getPlayer().sendMessage(ChatColor.RED + "Can not kill players in their chunks.");}}
 				if(jefaso.equals(intruso.getPlayer().getName()) || amigaso.equals(intruso.getPlayer().getName())){e.setCancelled(false);}}
-				}
-	}
+				}}
+	
+	if (e.getDamager() instanceof Player) {
+        Player p = (Player)e.getDamager();
+		if (e.getEntity() instanceof ItemFrame) {
+			
+			String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
+			String amigaso = getConfig().getString("friends." + jefaso + "." + p.getName(), "").toLowerCase();	
+			if(!jefaso.equals("")){
+				if(!jefaso.equals(p.getName())){
+					if(!amigaso.equals(p.getName())){
+						e.setCancelled(true);
+						p.sendMessage(ChatColor.RED + "that frame belongs to " + jefaso + ".");}}
+			if(jefaso.equals(p.getName()) || amigaso.equals(p.getName())){e.setCancelled(false);}}
+			
+			
+        } 
+    }
 	
 }
 
+
+@EventHandler
+public void crearcartel(HangingPlaceEvent e){
+	Player p = e.getPlayer();
+	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
+	String amigaso = getConfig().getString("friends." + jefaso + "." + p.getName(), "").toLowerCase();	
+	if(!jefaso.equals("")){
+		if(!jefaso.equals(p.getName())){
+			if(!amigaso.equals(p.getName())){
+				e.setCancelled(true);
+				p.sendMessage(ChatColor.RED + "can not put that on " + jefaso + " land.");}}
+	if(jefaso.equals(p.getName()) || amigaso.equals(p.getName())){e.setCancelled(false);}}
+	
+}
+@EventHandler
+public void rompercartel(HangingBreakByEntityEvent e){
+	if(e.getRemover() instanceof Player){
+	Player p = (Player) e.getRemover();
+	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
+	String amigaso = getConfig().getString("friends." + jefaso + "." + p.getName(), "").toLowerCase();	
+	if(!jefaso.equals("")){
+		if(!jefaso.equals(p.getName())){
+			if(!amigaso.equals(p.getName())){
+				e.setCancelled(true);
+				p.sendMessage(ChatColor.RED + "that frame belongs to " + jefaso + ".");}}
+	if(jefaso.equals(p.getName()) || amigaso.equals(p.getName())){e.setCancelled(false);}}
+	}
+}
+@EventHandler
+public void movercartel(PlayerInteractEntityEvent e){
+if(e.getPlayer() instanceof Player){
+	if(e.getRightClicked() instanceof ItemFrame){
+	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getRightClicked().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getRightClicked().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
+	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
+	if(!jefaso.equals("")){
+		if(!jefaso.equals(e.getPlayer().getName())){
+			if(!amigaso.equals(e.getPlayer().getName())){
+				
+				e.setCancelled(true);
+				e.getPlayer().sendMessage(ChatColor.RED + "that frame belongs to " + jefaso + ".");}}
+	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}
+	}	
+}
+
+}
 @Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	if(sender instanceof Player){
@@ -200,7 +265,7 @@ public void damage(EntityDamageByEntityEvent e){
 					int contar = 0;
 					if(getConfig().contains("counter." + p.getPlayer().getName())){
 					contar = getConfig().getInt("counter." + p.getPlayer().getName());
-					if(contar >= 6){p.sendMessage(ChatColor.DARK_RED + "You have reach limit of chunks");return false;}
+					if(contar == 5){p.sendMessage(ChatColor.DARK_RED + "You have reach limit of chunks");return false;}
 					}
 					getConfig().set("counter." + p.getPlayer().getName(), contar +1);
 					getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), p.getPlayer().getName());

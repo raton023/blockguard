@@ -201,18 +201,13 @@ public void blockprotecttnt(EntityExplodeEvent e){
 	e.setCancelled(false);}}
 	}
 
-
-
-
-
 @Override
 public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	if(sender instanceof Player){
 		Player p = (Player)sender;
-		
 		if(command.getName().equalsIgnoreCase("bg")){
 			if(args.length == 0){
-				p.sendMessage(ChatColor.DARK_RED + "/bg <claim unclaim tp allow disallow>");
+				p.sendMessage(ChatColor.DARK_BLUE + "/bg <claim unclaim tp list allow disallow>");
 				return false;}
 			if(args[0].equalsIgnoreCase("allow")){
 				if(args.length == 1){
@@ -226,64 +221,56 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 				if(args.length >= 3){
 					p.sendMessage(ChatColor.DARK_RED + "/bg allow <player>");
 					return false;}}
+			
+			if(args[0].equalsIgnoreCase("list")){
+				if(args.length == 1){
+					p.sendMessage(ChatColor.DARK_RED + "/bg list <player>");
+					return false;}
+				if(args.length == 2){
+					String lista0 = "free";
+					String lista1 = "free";
+					String lista2 = "free";
+					String lista3 = "free";
+					String lista4 = "free";
+					String lista5 = "free";
+					if(getConfig().contains("listchunks." + args[1] + ".0")){
+					lista0 = getConfig().getString("listchunks." + args[1] + ".0");}
+					if(getConfig().contains("listchunks." + args[1] + ".1")){
+					lista1 = getConfig().getString("listchunks." + args[1] + ".1");}
+					if(getConfig().contains("listchunks." + args[1] + ".2")){
+					lista2 = getConfig().getString("listchunks." + args[1] + ".2");}
+					if(getConfig().contains("listchunks." + args[1] + ".3")){
+					lista3 = getConfig().getString("listchunks." + args[1] + ".3");}
+					if(getConfig().contains("listchunks." + args[1] + ".4")){
+					lista4 = getConfig().getString("listchunks." + args[1] + ".4");}
+					if(getConfig().contains("listchunks." + args[1] + ".5")){
+					lista5 = getConfig().getString("listchunks." + args[1] + ".5");}
+
+					p.sendMessage(ChatColor.DARK_GREEN + args[1] + " list: " + ChatColor.YELLOW + lista0 + ", " + lista1 + ", " + lista2 + ", " + lista3 + ", " + lista4 + ", " + lista5 + ".");
+					
+					return true;}
+				if(args.length >= 3){
+					p.sendMessage(ChatColor.DARK_RED + "/bg list <player>");
+					return false;}}
+			
 			if(args[0].equalsIgnoreCase("tp")){
 				if(args.length == 1){
-					p.sendMessage(ChatColor.DARK_RED + "/bg tp <set del go> <name>");
-					return false;
-				}
+					p.sendMessage(ChatColor.DARK_RED + "/bg tp <name>");
+					return false;}	
 				if(args.length == 2){
-				p.sendMessage(ChatColor.DARK_RED + "/bg tp <set del go> <name>");
-				return false;
-			}if(args.length == 3){
-				if(args[1].equalsIgnoreCase("set")){
-					String tpchunk = getConfig().getString("teleport." + args[2] + ".owner", "").toLowerCase();
-					if(tpchunk.isEmpty()){
-					int chunkx = p.getLocation().getBlockX();
-					int chunky = p.getLocation().getBlockY();
-					int chunkz = p.getLocation().getBlockZ();
-					getConfig().set("teleport." + args[2] + ".x", chunkx);
-					getConfig().set("teleport." + args[2] + ".y", chunky);
-					getConfig().set("teleport." + args[2] + ".z", chunkz);
-					getConfig().set("teleport." + args[2] + ".owner", p.getPlayer().getName());
-					saveConfig();	
-					p.sendMessage(ChatColor.GREEN + "teleport set as " + args[2] + "!");
-					return true;}
-				p.sendMessage(ChatColor.RED + args[2] + " is owned by " + tpchunk);}
-				if(args[1].equalsIgnoreCase("del")){
-					String tpchunk = getConfig().getString("teleport." + args[2] + ".owner", "").toLowerCase();
-					if(tpchunk.equals(p.getName())){
-					getConfig().set("teleport." + args[2] + ".x","");
-					getConfig().set("teleport." + args[2] + ".y","");
-					getConfig().set("teleport." + args[2] + ".z","");
-					getConfig().set("teleport." + args[2] + ".owner", "");
-					saveConfig();
-					p.sendMessage(ChatColor.DARK_PURPLE + "removed " + args[2] + "!");
-					return true;
-					}if(tpchunk.equals("")){p.sendMessage(ChatColor.RED + args[2] + " does not exist!");
-					return false;}
-					if(!tpchunk.isEmpty() && !tpchunk.equals(p.getName())){
-					p.sendMessage(ChatColor.RED + args[2] + " is owned by " + tpchunk);}
-				}
-				if(args[1].equalsIgnoreCase("go")){
-					String tpchunk = getConfig().getString("teleport." + args[2] + ".owner", "").toLowerCase();
-					int xl = getConfig().getInt("teleport." + args[2] + ".x");
-					int yl = getConfig().getInt("teleport." + args[2] + ".y");
-					int zl = getConfig().getInt("teleport." + args[2] + ".z");
-					String owner = getConfig().getString("teleport." + args[2] + ".z");
+					String tpchunk = getConfig().getString("teleport." + args[1] + ".owner", "").toLowerCase();
+					int xl = getConfig().getInt("teleport." + args[1] + ".x");
+					int yl = getConfig().getInt("teleport." + args[1] + ".y");
+					int zl = getConfig().getInt("teleport." + args[1] + ".z");
+					String owner = getConfig().getString("teleport." + args[1] + ".z");
 					if(tpchunk.equals("")){
-						p.sendMessage(ChatColor.DARK_RED + args[2] + " does not exist");
-					return false;
-					}
+						p.sendMessage(ChatColor.DARK_RED + args[1] + " does not exist");
+					return false;}
 					if(!owner.equals("")){
 					Location newloc = new Location(p.getPlayer().getWorld(), xl,yl,zl);
 					p.teleport(newloc);
-				p.sendMessage(ChatColor.YELLOW + "teleporting to " + args[2]);	
-				}}}
-			
-				if(args.length >= 4){
-					p.sendMessage(ChatColor.DARK_RED + "/bg tp <set del go> <name>");
-					return false;}}
-			
+				p.sendMessage(ChatColor.YELLOW + "teleporting to " + args[1]);	
+				}}if(args.length >= 3){p.sendMessage(ChatColor.DARK_RED + "/bg tp <name>");return false;}}
 		if(args[0].equalsIgnoreCase("disallow")){
 			if(args.length == 1){
 				p.sendMessage(ChatColor.DARK_RED + "/bg dissallow <player>");
@@ -297,18 +284,29 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 				return false;}
 		}if(args[0].equalsIgnoreCase("claim")){
 			if(args.length == 1){
+				p.sendMessage(ChatColor.DARK_RED + "/bg claim name");}
+			if(args.length == 2){
 				int chunkx = p.getLocation().getChunk().getX();
 				int chunkz = p.getLocation().getChunk().getZ();
-				String jefaso = getConfig().getString("chunk." + String.valueOf(p.getLocation().getChunk().getX()) + "." + String.valueOf(p.getLocation().getChunk().getZ()), "").toLowerCase();
+				String jefaso = getConfig().getString("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "").toLowerCase();
 				if(jefaso.equals("")){
 					int contar = 0;
 					if(getConfig().contains("counter." + p.getPlayer().getName())){
 					contar = getConfig().getInt("counter." + p.getPlayer().getName());
-					if(contar == 5){p.sendMessage(ChatColor.DARK_RED + "You have reach limit of chunks");return false;}
-					}
+					if(contar == 5){p.sendMessage(ChatColor.DARK_RED + "You have reach limit of chunks");return false;}}
+					String tpchunk = getConfig().getString("teleport." + args[1] + ".owner", "").toLowerCase();
+					if(tpchunk.isEmpty()){
+					int tx = p.getLocation().getBlockX();
+					int ty = p.getLocation().getBlockY();
+					int tz = p.getLocation().getBlockZ();
 					getConfig().set("counter." + p.getPlayer().getName(), contar +1);
+					getConfig().set("teleport." + args[1] + ".name", args[1]);
+					getConfig().set("teleport." + args[1] + ".x", tx);
+					getConfig().set("teleport." + args[1] + ".y", ty);
+					getConfig().set("teleport." + args[1] + ".z", tz);
+					getConfig().set("teleport." + args[1] + ".owner", p.getPlayer().getName());
+					getConfig().set("listchunks." + p.getPlayer().getName() + "." + contar, args[1]);
 					getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), p.getPlayer().getName());
-					getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), args[1]);
 					saveConfig();	
 				int altura = p.getLocation().getBlockY();
 				Block block1 = p.getLocation().getChunk().getBlock(0, altura+2, 0);
@@ -319,10 +317,7 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 				block3.setType(Material.JACK_O_LANTERN);
 				Block block4 = p.getLocation().getChunk().getBlock(15, altura+2, 15);
 				block4.setType(Material.JACK_O_LANTERN);
-				p.getPlayer().sendMessage(ChatColor.GREEN + "Chunk Registred. Add TP /bg tp set <tpname>");
-					
-					
-					}
+				p.getPlayer().sendMessage(ChatColor.GREEN + "This chunk now is yours");}}
 			if(!jefaso.equals("")){
 				if(jefaso.equals(p.getPlayer().getName())){
 					p.getPlayer().sendMessage(ChatColor.YELLOW + "This chunk is already yours");}
@@ -332,24 +327,32 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 				p.sendMessage(ChatColor.DARK_RED + "/bg claim name");}}
 		if(args[0].equalsIgnoreCase("unclaim")){
 			if(args.length == 1){
+				p.sendMessage(ChatColor.DARK_RED + "/bg unclaim name");
+				return false;}
+			if(args.length == 2){
 				int chunkx = p.getLocation().getChunk().getX();
 				int chunkz = p.getLocation().getChunk().getZ();
 				String jefaso = getConfig().getString("chunk." + String.valueOf(p.getLocation().getChunk().getX()) + "." + String.valueOf(p.getLocation().getChunk().getZ()), "").toLowerCase();
 				if(!jefaso.equals("")){
 					if(jefaso.equals(p.getPlayer().getName())){
+						String tpchunk = getConfig().getString("teleport." + args[1] + ".owner", "").toLowerCase();
+						if(tpchunk.equals(p.getName())){
 						int contar = getConfig().getInt("counter." + p.getPlayer().getName());
+						getConfig().set("teleport." + args[1] + ".name", "");
+						getConfig().set("teleport." + args[1] + ".x", "");
+						getConfig().set("teleport." + args[1] + ".y", "");
+						getConfig().set("teleport." + args[1] + ".z", "");
+						getConfig().set("teleport." + args[1] + ".owner", "");
+						getConfig().set("listchunks." + p.getPlayer().getName() + "." + contar, "");
 						getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
 						getConfig().set("counter." + p.getPlayer().getName(), contar -1);
 						saveConfig();
-						p.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "Chunk successfuly removed.");}
+						p.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "Chunk successfuly removed.");}}
 					if(!jefaso.equals(p.getPlayer().getName())){
 						p.getPlayer().sendMessage(ChatColor.DARK_RED + "This chunk belongs to " + jefaso + ".");}}
 				if(jefaso.equals("")){
 					p.getPlayer().sendMessage(ChatColor.AQUA + "This is a free chunk.");}
 				return false;
-			}if(args.length >= 2){
-				p.sendMessage(ChatColor.DARK_RED + "/bg unclaim");
-				return false;
-			}}}
-		
-	}return true;}}
+			}if(args.length >= 3){
+				p.sendMessage(ChatColor.DARK_RED + "/bg unclaim name");
+				return false;}}}}return true;}}

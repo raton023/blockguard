@@ -167,7 +167,6 @@ public void empujapistones(BlockPistonExtendEvent e){
 	for(Block movidos : e.getBlocks()){
 		String mov = getConfig().getString("chunk." + String.valueOf(movidos.getChunk().getX()) + "." + String.valueOf(movidos.getChunk().getZ()), "").toLowerCase();
 if(!mov.isEmpty()){if(movidos.getChunk() != e.getBlock().getChunk()){e.setCancelled(true);}}}}
-
 @EventHandler
 public void incendio(BlockBurnEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
@@ -191,14 +190,10 @@ public void blockprotecttnt(EntityExplodeEvent e){
 	}
 	}
 	if(e.getEntity() instanceof TNTPrimed){
-		if(jefaso.isEmpty()){
-	e.setCancelled(true);	
-	}
-	if(!jefaso.isEmpty()){
-	e.setCancelled(false);}}
-	}
 
-
+		for(Block tronados : e.blockList()){
+			String tronadoschunk = getConfig().getString("chunk." + String.valueOf(tronados.getChunk().getX()) + "." + String.valueOf(tronados.getChunk().getZ()), "").toLowerCase();
+			if(!tronadoschunk.isEmpty()){e.setCancelled(true);}}}}
 @Override
 public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	if(sender instanceof Player){

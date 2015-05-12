@@ -1,5 +1,4 @@
 package com.craftilandia.blockguard;
-import java.util.Date;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -164,15 +163,11 @@ if(e.getPlayer() instanceof Player){
 				e.getPlayer().sendMessage(ChatColor.RED + "that frame belongs to " + jefaso + ".");}}
 	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}}}
 @EventHandler
-public void pistones(BlockPistonExtendEvent e){
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
-	if(jefaso.isEmpty()){
-	e.setCancelled(true);
-	}
-	if(!jefaso.isEmpty()){Date date = new Date();
-		getServer().getLogger().config(date + " " + e.getBlock().getChunk().getX() + " " + e.getBlock().getChunk().getZ() + " used on " + jefaso + " lands.");
-	}
-	}
+public void empujapistones(BlockPistonExtendEvent e){
+	for(Block movidos : e.getBlocks()){
+		String mov = getConfig().getString("chunk." + String.valueOf(movidos.getChunk().getX()) + "." + String.valueOf(movidos.getChunk().getZ()), "").toLowerCase();
+if(!mov.isEmpty()){if(movidos.getChunk() != e.getBlock().getChunk()){e.setCancelled(true);}}}}
+
 @EventHandler
 public void incendio(BlockBurnEvent e){
 	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
@@ -202,6 +197,7 @@ public void blockprotecttnt(EntityExplodeEvent e){
 	if(!jefaso.isEmpty()){
 	e.setCancelled(false);}}
 	}
+
 
 @Override
 public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {

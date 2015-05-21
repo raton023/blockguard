@@ -1,8 +1,10 @@
-name: blockguard
-main: com.craftilandia.blockguard.Main
-version: 1.0
+name: chunkprotector
+main: com.craftilandia.chunkprotector.Main
+version: 7.0
 commands:
-    invite:
-        description: agrega amigos para que puedan usar tus chunks
-    uninvite:
-        description: agrega amigos para que puedan usar tus chunks
+    chunk:
+        description: Chunk protection.
+permissions:
+    chunkprotector.unlimited:
+        description: To have unlimited chunks claims.
+        default: op

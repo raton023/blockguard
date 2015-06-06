@@ -28,6 +28,7 @@ import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements Listener {
 		
@@ -38,29 +39,29 @@ getConfig().options().copyDefaults(true);
 saveConfig();}
 @EventHandler
 public void nobreak(BlockBreakEvent e){
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
+	String jefaso = getConfig().getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(e.getPlayer().getName())){
 			if(!amigaso.equals(e.getPlayer().getName())){
 				e.setCancelled(true);
 				e.getPlayer().sendMessage(ChatColor.RED + "Can not break on " + jefaso + " chunk.");}}
-	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}
+	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName()) || e.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}
 if(jefaso.equals("")){e.setCancelled(false);}}
 @EventHandler
 public void noplace(BlockPlaceEvent e){
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
+	String jefaso = getConfig().getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(e.getPlayer().getName())){
 			if(!amigaso.equals(e.getPlayer().getName())){
 				e.setCancelled(true);
 				e.getPlayer().sendMessage(ChatColor.RED + "Can not build on " + jefaso + " land.");}}
-	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}
+	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName()) || e.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}}
 @EventHandler
 public void nouse(PlayerInteractEvent e){
 	if(e.getClickedBlock() != null) {
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getClickedBlock().getChunk().getX()) + "." + String.valueOf(e.getClickedBlock().getChunk().getZ()), "").toLowerCase();
+	String jefaso = getConfig().getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getClickedBlock().getChunk().getX()) + "." + String.valueOf(e.getClickedBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(e.getPlayer().getName())){
@@ -70,37 +71,37 @@ Material b = e.getClickedBlock().getType();
 			if ((b == Material.DISPENSER) || (b == Material.FENCE_GATE) || (b == Material.DROPPER) || (b == Material.HOPPER) || (b == Material.BEACON) || (b == Material.ANVIL) ||  (b == Material.BREWING_STAND) || (b == Material.JUKEBOX) || (b == Material.FURNACE) || (b == Material.CHEST) || (b == Material.LEVER) || (b == Material.WOODEN_DOOR) || (b == Material.STONE_BUTTON) || (b == Material.WOOD_BUTTON) || (b == Material.TRAP_DOOR)){	
 		e.setCancelled(true);
 		e.getPlayer().sendMessage(ChatColor.RED + "Can not use that on " + jefaso + " land.");}}}}
-		if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}}
+		if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName()) || e.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}}}
 @EventHandler
 public void nobaldes(PlayerBucketEmptyEvent e){
-String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlockClicked().getChunk().getX()) + "." + String.valueOf(e.getBlockClicked().getChunk().getZ()), "").toLowerCase();
+String jefaso = getConfig().getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getBlockClicked().getChunk().getX()) + "." + String.valueOf(e.getBlockClicked().getChunk().getZ()), "").toLowerCase();
 String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
 if(!jefaso.equals("")){
 	if(!jefaso.equals(e.getPlayer().getName())){
 		if(!amigaso.equals(e.getPlayer().getName())){
 			e.setCancelled(true);
 			e.getPlayer().sendMessage(ChatColor.RED + "Can not use buckets on " + jefaso + " land.");}}
-if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}
+if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName()) || e.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}}
 @EventHandler
 public void damage(EntityDamageByEntityEvent e){	
 	if (e.getEntity() instanceof Animals || e.getEntity() instanceof Villager){
 		if(e.getDamager() instanceof Player){
 	Player p = (Player) e.getDamager();
-		String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getChunk().getZ()), "").toLowerCase();
+		String jefaso = getConfig().getString(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getChunk().getZ()), "").toLowerCase();
 		String amigaso = getConfig().getString("friends." + jefaso + "." + p.getPlayer().getName(), "").toLowerCase();	
 		if(!jefaso.equals("")){
 			if(!jefaso.equals(p.getPlayer().getName())){
 				if(!amigaso.equals(p.getPlayer().getName())){
 					e.setCancelled(true);
 					p.getPlayer().sendMessage(ChatColor.RED + "Belongs to " + jefaso + "!");}}
-		if(jefaso.equals(p.getPlayer().getName()) || amigaso.equals(p.getPlayer().getName())){e.setCancelled(false);}}
+		if(jefaso.equals(p.getPlayer().getName()) || amigaso.equals(p.getPlayer().getName()) || p.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}
 		}
 	}
 	if (e.getEntity() instanceof Player){
 		if(e.getDamager() instanceof Player){
 			Player intruso = (Player) e.getDamager();
 			Player jefechunk = (Player) e.getEntity();
-				String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getChunk().getZ()), "").toLowerCase();
+				String jefaso = getConfig().getString(e.getEntity().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getChunk().getZ()), "").toLowerCase();
 				String amigaso = getConfig().getString("friends." + jefaso + "." + jefechunk.getPlayer().getName(), "").toLowerCase();	
 				if(!jefaso.equals("")){
 					if(!jefaso.equals(intruso.getPlayer().getName())){
@@ -113,74 +114,92 @@ public void damage(EntityDamageByEntityEvent e){
 	if (e.getEntity() instanceof ItemFrame) {
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player)e.getDamager();
-			String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
+			String jefaso = getConfig().getString(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
 			String amigaso = getConfig().getString("friends." + jefaso + "." + p.getName(), "").toLowerCase();	
 			if(!jefaso.equals("")){
 				if(!jefaso.equals(p.getName())){
 					if(!amigaso.equals(p.getName())){
 						e.setCancelled(true);
 						p.sendMessage(ChatColor.RED + "that frame belongs to " + jefaso + ".");}}
-			if(jefaso.equals(p.getName()) || amigaso.equals(p.getName())){e.setCancelled(false);}}} 
+			if(jefaso.equals(p.getName()) || amigaso.equals(p.getName()) || p.hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}} 
 		if (e.getDamager() instanceof Creeper || e.getDamager() instanceof Arrow || e.getDamager() instanceof TNTPrimed) {
 						e.setCancelled(true);}}}
 @EventHandler
 public void crearcartel(HangingPlaceEvent e){
 	Player p = e.getPlayer();
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
+	String jefaso = getConfig().getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + p.getName(), "").toLowerCase();	
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(p.getName())){
 			if(!amigaso.equals(p.getName())){
 				e.setCancelled(true);
 				p.sendMessage(ChatColor.RED + "can not put that on " + jefaso + " land.");}}
-	if(jefaso.equals(p.getName()) || amigaso.equals(p.getName())){e.setCancelled(false);}}
+	if(jefaso.equals(p.getName()) || amigaso.equals(p.getName()) || e.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}
 	
 }
 @EventHandler
 public void rompercartel(HangingBreakByEntityEvent e){
 	if(e.getRemover() instanceof Player){
 	Player p = (Player) e.getRemover();
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
+	String jefaso = getConfig().getString(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + p.getName(), "").toLowerCase();	
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(p.getName())){
 			if(!amigaso.equals(p.getName())){
 				e.setCancelled(true);
 				p.sendMessage(ChatColor.RED + "that frame belongs to " + jefaso + ".");}}
-	if(jefaso.equals(p.getName()) || amigaso.equals(p.getName())){e.setCancelled(false);}}
+	if(jefaso.equals(p.getName()) || amigaso.equals(p.getName()) || p.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}
 	}
 }
 @EventHandler
 public void movercartel(PlayerInteractEntityEvent e){
 if(e.getPlayer() instanceof Player){
 	if(e.getRightClicked() instanceof ItemFrame){
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getRightClicked().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getRightClicked().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
+	String jefaso = getConfig().getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getRightClicked().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getRightClicked().getLocation().getBlock().getChunk().getZ()), "").toLowerCase();
 	String amigaso = getConfig().getString("friends." + jefaso + "." + e.getPlayer().getName(), "").toLowerCase();	
 	if(!jefaso.equals("")){
 		if(!jefaso.equals(e.getPlayer().getName())){
 			if(!amigaso.equals(e.getPlayer().getName())){
 				e.setCancelled(true);
 				e.getPlayer().sendMessage(ChatColor.RED + "that frame belongs to " + jefaso + ".");}}
-	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName())){e.setCancelled(false);}}}}}
+	if(jefaso.equals(e.getPlayer().getName()) || amigaso.equals(e.getPlayer().getName()) || e.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}}}}
 @EventHandler
 public void empujapistones(BlockPistonExtendEvent e){
 	for(Block movidos : e.getBlocks()){
-		String mov = getConfig().getString("chunk." + String.valueOf(movidos.getChunk().getX()) + "." + String.valueOf(movidos.getChunk().getZ()), "").toLowerCase();
-if(!mov.isEmpty()){if(movidos.getChunk() != e.getBlock().getChunk()){e.setCancelled(true);}}}}
+		String mov = getConfig().getString(e.getBlock().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(movidos.getChunk().getX()) + "." + String.valueOf(movidos.getChunk().getZ()), "").toLowerCase();
+if(!mov.isEmpty()){if(movidos.getChunk() != e.getBlock().getChunk()){
+	e.setCancelled(true);
+	}}}}
 @EventHandler
 public void incendio(BlockBurnEvent e){
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
+	String jefaso = getConfig().getString(e.getBlock().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ()), "").toLowerCase();
 if(jefaso.isEmpty()){
-e.setCancelled(false);	
-}
+e.setCancelled(false);}
 if(!jefaso.isEmpty()){
-e.setCancelled(true);
-}
+e.setCancelled(true);}}
+
+@EventHandler
+public void caminando(PlayerMoveEvent e){
 	
-}
+	if(e.getTo().getChunk() != e.getFrom().getChunk()){
+		String jefaso = getConfig().getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getTo().getChunk().getX()) + "." + String.valueOf(e.getTo().getChunk().getZ()), "").toLowerCase();
+		String fromjefaso = getConfig().getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getFrom().getChunk().getX()) + "." + String.valueOf(e.getFrom().getChunk().getZ()), "").toLowerCase();
+		if(!fromjefaso.isEmpty()){
+			e.getPlayer().sendMessage(ChatColor.YELLOW + "Leaving "+fromjefaso+" land's");
+			}
+		if(!jefaso.isEmpty()){
+			e.getPlayer().sendMessage(ChatColor.YELLOW + "Entering "+jefaso+" land's ");
+			//e.getPlayer().sendMessage(""+e.getPlayer().getWorld().getWorldFolder().toString().replace("./", ""));
+		}
+		
+	}
+
+	
+	}
+
 @EventHandler
 public void blockprotecttnt(EntityExplodeEvent e){
-	String jefaso = getConfig().getString("chunk." + String.valueOf(e.getEntity().getLocation().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getChunk().getZ()), "").toLowerCase();
+	String jefaso = getConfig().getString(e.getEntity().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getChunk().getZ()), "").toLowerCase();
 	if(e.getEntity() instanceof Creeper){
 		if(jefaso.isEmpty()){
 	e.setCancelled(false);	
@@ -192,7 +211,7 @@ public void blockprotecttnt(EntityExplodeEvent e){
 	if(e.getEntity() instanceof TNTPrimed){
 
 		for(Block tronados : e.blockList()){
-			String tronadoschunk = getConfig().getString("chunk." + String.valueOf(tronados.getChunk().getX()) + "." + String.valueOf(tronados.getChunk().getZ()), "").toLowerCase();
+			String tronadoschunk = getConfig().getString(e.getEntity().getWorld().getWorldFolder().toString().replace("./", "")+"."+ String.valueOf(tronados.getChunk().getX()) + "." + String.valueOf(tronados.getChunk().getZ()), "").toLowerCase();
 			if(!tronadoschunk.isEmpty()){e.setCancelled(true);}}}}
 @Override
 public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -242,9 +261,14 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 						p.sendMessage(ChatColor.DARK_RED + args[1] + " does not exist");
 					return false;}
 					if(!owner.equals("")){
-					Location newloc = new Location(p.getPlayer().getWorld(), xl,yl,zl);
-					p.teleport(newloc);
-				p.sendMessage(ChatColor.YELLOW + "teleporting to " + args[1]);	
+						p.sendMessage(""+getServer().getWorlds().toString());
+						for(int s=0;s<getServer().getWorlds().size();s++){
+						if(getServer().getWorlds().get(s).getWorldFolder().toString().replace("./", "").equals(getConfig().getString("teleport."+args[1]+".world")) ){
+							Location newloc = new Location(getServer().getWorlds().get(s), xl,yl,zl);
+							p.teleport(newloc);
+							p.sendMessage(ChatColor.YELLOW + "teleporting to " + args[1]);	
+						}}
+	
 				}}if(args.length >= 3){p.sendMessage(ChatColor.DARK_RED + "/bg tp <name>");return false;}}
 		if(args[0].equalsIgnoreCase("disallow")){
 			if(args.length == 1){
@@ -265,63 +289,48 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 				int chunkz = p.getLocation().getChunk().getZ();
 				String jefaso = getConfig().getString("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "").toLowerCase();
 				if(jefaso.equals("")){
-					int contar = 0;
-					if(getConfig().contains("counter." + p.getPlayer().getName())){
-					contar = getConfig().getInt("counter." + p.getPlayer().getName());
-					
-					if(contar == 3){
-						if(p.hasPermission("chunkprotector.unlimited")){
-							
-							String nombre = getConfig().getString("teleport." + args[1] + ".name");
-							String tpchunk = getConfig().getString("teleport." + args[1] + ".owner", "").toLowerCase();
-							if(tpchunk.isEmpty()){
-							int tx = p.getLocation().getBlockX();
-							int ty = p.getLocation().getBlockY();
-							int tz = p.getLocation().getBlockZ();
-							getConfig().set("counter." + p.getPlayer().getName(), contar +1);
-							getConfig().set("teleport." + args[1] + ".x", tx);
-							getConfig().set("teleport." + args[1] + ".y", ty);
-							getConfig().set("teleport." + args[1] + ".z", tz);
-							getConfig().set("teleport." + args[1] + ".xchunk", p.getLocation().getChunk().getX());
-							getConfig().set("teleport." + args[1] + ".zchunk", p.getLocation().getChunk().getZ());
-							getConfig().set("teleport." + args[1] + ".owner", p.getName());
-							getConfig().set("teleport." + args[1] + ".name", args[1]);
-							List<String> getlist = getConfig().getStringList("listchunks." + p.getName());
-							getlist.add("" + args[1]);
-							getConfig().set("listchunks." + p.getName(), getlist);    
-							getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), p.getPlayer().getName());
-							saveConfig();	
-						int altura = p.getLocation().getBlockY();
-						Block block1 = p.getLocation().getChunk().getBlock(0, altura, 0);
-						block1.setType(Material.JACK_O_LANTERN);
-						Block block2 = p.getLocation().getChunk().getBlock(0, altura, 15);
-						block2.setType(Material.JACK_O_LANTERN);
-						Block block3 = p.getLocation().getChunk().getBlock(15, altura, 0);
-						block3.setType(Material.JACK_O_LANTERN);
-						Block block4 = p.getLocation().getChunk().getBlock(15, altura, 15);
-						block4.setType(Material.JACK_O_LANTERN);
-						p.getPlayer().sendMessage(ChatColor.GREEN + "This chunk is now yours");
-						return true;}
-						if(!nombre.isEmpty()){
-							if(nombre.equals(args[1])){
-								p.sendMessage(ChatColor.DARK_RED  + nombre + " is registred by " + tpchunk);}
-						return true;	
-						}
-						
-							
-						}
-						p.sendMessage(ChatColor.DARK_RED + "You have reach limit of chunks");
-						return false;
-						}
-					
+					int max = 0;
+					if(p.hasPermission("chunkprotector.1")){
+						max = 1;
 					}
+					if(p.hasPermission("chunkprotector.2")){
+						max = 2;
+					}
+					if(p.hasPermission("chunkprotector.3")){
+						max = 3;
+					}
+					if(p.hasPermission("chunkprotector.4")){
+						max = 4;
+					}
+					if(p.hasPermission("chunkprotector.5")){
+						max = 5;
+					}
+					if(p.hasPermission("chunkprotector.6")){
+						max = 6;
+					}
+					if(p.hasPermission("chunkprotector.7")){
+						max = 7;
+					}
+					if(p.hasPermission("chunkprotector.8")){
+						max = 8;
+					}
+					if(p.hasPermission("chunkprotector.unlimited")){
+						max = 1000;
+					}
+					int registradas = 0;
+					registradas = getConfig().getInt("counter." + p.getPlayer().getName());
+					if(registradas > max){
+						p.sendMessage(ChatColor.DARK_PURPLE + "You have reach the max amount of chunks");
+						return false;
+					}
+					
 					String nombre = getConfig().getString("teleport." + args[1] + ".name");
 					String tpchunk = getConfig().getString("teleport." + args[1] + ".owner", "").toLowerCase();
 					if(tpchunk.isEmpty()){
 					int tx = p.getLocation().getBlockX();
 					int ty = p.getLocation().getBlockY();
 					int tz = p.getLocation().getBlockZ();
-					getConfig().set("counter." + p.getPlayer().getName(), contar +1);
+					getConfig().set("counter." + p.getPlayer().getName(), registradas + 1);
 					getConfig().set("teleport." + args[1] + ".x", tx);
 					getConfig().set("teleport." + args[1] + ".y", ty);
 					getConfig().set("teleport." + args[1] + ".z", tz);
@@ -329,20 +338,21 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 					getConfig().set("teleport." + args[1] + ".zchunk", p.getLocation().getChunk().getZ());
 					getConfig().set("teleport." + args[1] + ".owner", p.getName());
 					getConfig().set("teleport." + args[1] + ".name", args[1]);
+					getConfig().set("teleport." + args[1] + ".world", p.getWorld().getWorldFolder().toString().replace("./", ""));
 					List<String> getlist = getConfig().getStringList("listchunks." + p.getName());
 					getlist.add("" + args[1]);
 					getConfig().set("listchunks." + p.getName(), getlist);    
-					getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), p.getPlayer().getName());
+					getConfig().set(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), p.getPlayer().getName());
 					saveConfig();	
-				int altura = p.getLocation().getBlockY();
-				Block block1 = p.getLocation().getChunk().getBlock(0, altura, 0);
-				block1.setType(Material.JACK_O_LANTERN);
-				Block block2 = p.getLocation().getChunk().getBlock(0, altura, 15);
-				block2.setType(Material.JACK_O_LANTERN);
-				Block block3 = p.getLocation().getChunk().getBlock(15, altura, 0);
-				block3.setType(Material.JACK_O_LANTERN);
-				Block block4 = p.getLocation().getChunk().getBlock(15, altura, 15);
-				block4.setType(Material.JACK_O_LANTERN);
+					int altura = p.getLocation().getBlockY();
+		              Block block1 = p.getLocation().getChunk().getBlock(0, altura + 2, 0);
+		              block1.setType(Material.JACK_O_LANTERN);
+		              Block block2 = p.getLocation().getChunk().getBlock(0, altura + 2, 15);
+		              block2.setType(Material.JACK_O_LANTERN);
+		              Block block3 = p.getLocation().getChunk().getBlock(15, altura + 2, 0);
+		              block3.setType(Material.JACK_O_LANTERN);
+		              Block block4 = p.getLocation().getChunk().getBlock(15, altura + 2, 15);
+		              block4.setType(Material.JACK_O_LANTERN);
 				p.getPlayer().sendMessage(ChatColor.GREEN + "This chunk is now yours");
 				return true;}
 				if(!nombre.isEmpty()){
@@ -362,7 +372,8 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 			if(args.length == 2){
 				int chunkx = getConfig().getInt("teleport." + args[1] + ".xchunk");
 				int chunkz = getConfig().getInt("teleport." + args[1] + ".zchunk");
-				String jefaso = getConfig().getString("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "").toLowerCase();
+				String world = getConfig().getString("teleport." + args[1] + ".world");
+				String jefaso = getConfig().getString(world+"." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "").toLowerCase();
 				if(!jefaso.equals("")){
 					if(jefaso.equals(p.getPlayer().getName())){
 						String tpchunk = getConfig().getString("teleport." + args[1] + ".owner", "").toLowerCase();
@@ -373,7 +384,7 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 						if(getlist.contains(args[1])){
 							getlist.remove(args[1]);}
 						getConfig().set("listchunks." + p.getName(), getlist);
-						getConfig().set("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
+						getConfig().set(p.getWorld().getWorldFolder().toString().replace("./", "")+"."+String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
 						getConfig().set("counter." + p.getPlayer().getName(), contar -1);
 						saveConfig();
 						p.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "Chunk successfuly removed.");}}

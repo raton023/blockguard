@@ -1,10 +1,22 @@
-name: chunkprotector
+name: ChunkProtector
 main: com.craftilandia.chunkprotector.Main
-version: 7.0
+version: 10.0
+author: raton023
+website: http://dev.bukkit.org/bukkit-plugins/blockguard/
 commands:
     chunk:
         description: Chunk protection.
+        usage: /claim <allow disallow tp claim unclaim list>
 permissions:
     chunkprotector.unlimited:
         description: To have unlimited chunks claims.
         default: op
+    chunkprotector.admin:
+        description: To run commands as another players(working on this).
+        default: false
+    chunkprotector.bypass:
+        description: to bypass all the protections.
+        default: op
+    chunkprotector.3:
+        description: how many chunks a player can register.
+        default: true

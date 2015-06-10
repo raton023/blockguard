@@ -1,12 +1,12 @@
 name: ChunkProtector
 main: com.craftilandia.chunkprotector.Main
-version: 10.0
+version: 11.0
 author: raton023
 website: http://dev.bukkit.org/bukkit-plugins/blockguard/
 commands:
     chunk:
         description: Chunk protection.
-        usage: /claim <allow disallow tp claim unclaim list>
+        usage: /claim <allow disallow tp claim unclaim list set>
 permissions:
     chunkprotector.unlimited:
         description: To have unlimited chunks claims.

@@ -1,6 +1,6 @@
 name: ChunkProtector
 main: com.craftilandia.chunkprotector.Main
-version: 11.0
+version: 15.0
 author: raton023
 website: http://dev.bukkit.org/bukkit-plugins/blockguard/
 commands:
@@ -20,3 +20,9 @@ permissions:
     chunkprotector.3:
         description: how many chunks a player can register.
         default: true
+    chunkprotector.nobuild:
+        description: if player can not build outside of a registered chunk.
+        default: false
+    chunkprotector.nobreak:
+        description: if player can not break outside of a registered chunk.
+        default: false

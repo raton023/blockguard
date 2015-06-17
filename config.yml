@@ -1,4 +1,3 @@
-
 messages:
   buildmsg: '&4can not build on OWNER land'
   breakmsg: '&4can not break on OWNER land'
@@ -13,7 +12,11 @@ messages:
   getframe: '&4can not get the item in that frame belongs to OWNER land'
   armorstand: '&4that armor belongs to OWNER'
   breakstand: '&4can not break that armor stand belongs to OWNER'
-  defaultenter: '&aEntering OWNER land'
-  defaultleave: '&aLeaving OWNER land'
+  defaultenter: '&aEntering CHUNKNAME owned by OWNER'
+  defaultleave: '&aLeaving CHUNKNAME owned by OWNER'
   reachlimitchunk: '&4PLAYER you have reach the max amount of chunks'
   teleportmsg: '&bteleporting to LOCATION'
+disableworld:
+- world_the_end
+- someotherworld1
+- someotherworld2

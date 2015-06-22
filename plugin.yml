@@ -1,12 +1,42 @@
-name: ChunkProtector
+name: Landlord
 main: com.craftilandia.chunkprotector.Main
-version: 15.0
+version: 16.0
 author: raton023
 website: http://dev.bukkit.org/bukkit-plugins/blockguard/
 commands:
-    chunk:
-        description: Chunk protection.
-        usage: /claim <allow disallow tp claim unclaim list set>
+    landclaim:
+        description: Claim Land.
+        usage: /landclaim <landname> ej. /landclaim spawn
+    landunclaim:
+        description: Unclaim a Land.
+        usage: /landunclaim <landname> ej. /landunclaim spawn
+    landallow:
+        description: Add a friend to your lands.
+        usage: /landallow <playername> ej. /landallow raton023
+    landallowlist:
+        description: See your friends list.
+        usage: /landallowlist ej. /landallowlist
+    landlist:
+        description: See a player land list.
+        usage: /landlist <playername> ej. /landlist raton023
+    landtp:
+        description: Teleport to a land.
+        usage: /landtp <landname> ej. /landtp spawn
+    landtpset:
+        description: Set the teleport to where you stand.
+        usage: /landtpset <landname> ej. /landtpset spawn
+    landgive:
+        description: Give a land to a player.
+        usage: /landgive <landname> <player> ej. /landtp spawn raton023
+    landdisallow:
+        description: Remove a friend from your lands.
+        usage: /landdisallow <player> ej. /landdisallow raton023
+    landenter:
+        description: Change the welcome message of your land.
+        usage: /landenter <landname> <message> ej. /landenter spawn &aWelcome to the Spawn.
+    landexit:
+        description: Change the leaving message of your land.
+        usage: /landenter <landname> <message> ej. /landenter spawn &aLeaving Spawn.
 permissions:
     chunkprotector.unlimited:
         description: To have unlimited chunks claims.

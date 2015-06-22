@@ -1,21 +1,44 @@
 messages:
+#the message that will be sent to the players when a player of his friendlist join the server
+  friendjoin: '&aPLAYER Your friend FRIEND has joined the server'
+#the message that show to the player when they can not build
   buildmsg: '&4can not build on OWNER land'
+#the break msg
   breakmsg: '&4can not break on OWNER land'
+#the message that shows to the player remember that CONTAINER is the variable for chest or whatever the player try to use
   usemsg: '&4can not use CONTAINER on OWNER land'
+#empty buckets message
   emptybucket: '&4can not empty buckets on OWNER land'
+#filling the bucket
   fillbucket: '&4can not fill buckets on OWNER land'
+#when a player tries to kill a mob like cow or villagers etc on another player land.
   pets: '&4that THEPET belongs to OWNER'
+#when a player attack another player inside his land
   pvpoff: '&4you can not kill OWNER on his land'
+#message shows to the player when they try to break a item frame
   breakframe: '&4can not break item frame in OWNER land'
+#when tries to put an itemframe
   putframe: '&4can not put frames on OWNER land'
+#move the item inside an itemframe msg
   moveframe: '&4can not move items in frames on OWNER land'
+#get the item inside the item frame
   getframe: '&4can not get the item in that frame belongs to OWNER land'
+#when tries to get the armor from an armorstand
   armorstand: '&4that armor belongs to OWNER'
+#when tries to break the armorstand
   breakstand: '&4can not break that armor stand belongs to OWNER'
+#the default enter message set to all lands before a player change it
   defaultenter: '&aEntering CHUNKNAME owned by OWNER'
+#the default leave msg
   defaultleave: '&aLeaving CHUNKNAME owned by OWNER'
-  reachlimitchunk: '&4PLAYER you have reach the max amount of chunks'
-  teleportmsg: '&bteleporting to LOCATION'
+#the message that shows to the player when reach the max amount of claims
+  reachlimitchunk: '&4PLAYER you have reach the limit of claims'
+#teleport msg, the world LOCATION will be replaced with land name.
+  teleportmsg: '&bTeleporting PLAYER to LOCATION'
+#the message when a player tries to claim a land on a disabled world
+  disabledworldclaim: '&4PLAYER this world is disabled for claims'
+#Here you put the name of the worlds you want to cancel claims
+#Where people will not be allowed to claim lands
 disableworld:
 - world_the_end
 - someotherworld1

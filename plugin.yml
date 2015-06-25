@@ -1,8 +1,9 @@
 name: Landlord
 main: com.craftilandia.chunkprotector.Main
-version: 16.0
+version: 17.0
 author: raton023
 website: http://dev.bukkit.org/bukkit-plugins/blockguard/
+softdepend: [Vault]
 commands:
     landclaim:
         description: Claim Land.
@@ -37,6 +38,9 @@ commands:
     landexit:
         description: Change the leaving message of your land.
         usage: /landenter <landname> <message> ej. /landenter spawn &aLeaving Spawn.
+    landtax:
+        description: Charge landlords.
+        usage: /landtax
 permissions:
     chunkprotector.unlimited:
         description: To have unlimited chunks claims.
@@ -56,3 +60,6 @@ permissions:
     chunkprotector.nobreak:
         description: if player can not break outside of a registered chunk.
         default: false
+    chunkprotector.nopay:
+        description: if player have this he will not pay for taxes or claim costs.
+        default: op

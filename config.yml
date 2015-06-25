@@ -1,4 +1,15 @@
+claim:
+#the cost that a player must pay per chunk claimed.
+  cost: 10
+tax:
+#the time that the tax is collected from landlords in ticks.
+#1 second is 20 ticks, a minecraft day have 24000 ticks and is 20 minutes.
+  time: 24000
+#the amount collected per chunk if a player have 3 chunks it will be charged with $30.
+  amount: 10
 messages:
+  taxcollect: '&1AMOUNT collected for your lands.'
+  taxnopaid: '&4You do not have AMOUNT for the tax for your lands, your lands had been unclaimed'
 #the message that will be sent to the players when a player of his friendlist join the server
   friendjoin: '&aPLAYER Your friend FRIEND has joined the server'
 #the message that show to the player when they can not build

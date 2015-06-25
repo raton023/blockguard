@@ -1,6 +1,6 @@
 # Landlord v17
 
-	COMMANDS	DESCRIPTION	
+Commmands:
 	/landclaim <landname>	Claim a chunk.	
 	/landunclaim <landname>	Unclaim a chunk.	
 	/landallow <friend>	add a player to your lands.	
@@ -12,10 +12,7 @@
 	/landgive <landname> <player>	give a land to another player	
 	/landenter <landname> <the message>	set the enter message of a land	
 	/landexit <landname> <the message>	set the leave message of a land
-
-
-
-	PERMISSIONS	DESCRIPTION	
+Permissions:
 	chunkprotector.1 2 3 4 5 6 7 8 till 30	(default 3) how much chunks can a player claim	
 	chunkprotector.unlimited	(default to op)to set a player to unlimited chunks	
 	chunkprotector.bypass	(default to op)player with this permission will can use break 

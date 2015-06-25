@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.milkbowl.vault.economy.Economy;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -39,20 +41,30 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements Listener {
 	File playerfile = new File(getDataFolder(), "playerinfo.yml");
 	FileConfiguration getConfigPlayers = YamlConfiguration.loadConfiguration(playerfile);
 	File blockfile = new File(getDataFolder(), "blockinfo.yml");
 	FileConfiguration getConfigBlocks = YamlConfiguration.loadConfiguration(blockfile);
+    public static Economy econ = null;
 @Override
 public void onEnable() {
+	if(!setupEconomy()){getServer().getLogger().severe(String.format("[%s] - ERROR No Vault dependency found!", getDescription().getName()));return;}
+	saveDefaultConfig();
 getServer().getPluginManager().registerEvents(this, this);
-saveDefaultConfig();
 if(!blockfile.exists()){try {blockfile.createNewFile();}catch(IOException e) {getServer().getLogger().severe("COULD NOT CREATE blockinfo.yml please reload");}}
 if(!playerfile.exists()){try {playerfile.createNewFile();}catch(IOException e) {getServer().getLogger().severe("COULD NOT CREATE playerinfo.yml please reload");}}
+getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+	@Override 
+	public void run() {taxes();}}, 180, getConfig().getInt("tax.time"));
 }
-
+private boolean setupEconomy() {if (getServer().getPluginManager().getPlugin("Vault") == null) {return false;}
+    RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+    if (rsp == null) {return false;}
+    econ = rsp.getProvider();
+    return econ != null;}
 @EventHandler
 public void nobreak(BlockBreakEvent e){
 	if(e.isCancelled()){return;}
@@ -71,6 +83,41 @@ public void nobreak(BlockBreakEvent e){
 				e.getPlayer().sendMessage(message);}}
 	if(owner.equals(e.getPlayer().getName()) || friend.equals(e.getPlayer().getName()) || e.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}
 }
+
+
+	public void taxes() {
+		List<?> landlords=getConfigPlayers.getList("landlords");
+		OfflinePlayer[] jugadores = getServer().getOfflinePlayers();
+		for(int i=0;jugadores.length>i;i++){
+			//if(jugadores.toString().contains((CharSequence) landlords)){}
+			String nombre = jugadores[i].getName();
+			if(landlords.contains(nombre)){
+				double val=getConfigPlayers.getDouble("counter." + nombre);
+				if(econ.getBalance(jugadores[i]) < getConfig().getInt("tax.amount")*val && !jugadores[i].getPlayer().hasPermission("chunkprotector.nopay")){
+					String sndmsg = getConfig().getString("messages.taxnopaid").replace("AMOUNT", String.valueOf(getConfig().getInt("tax.amount")*val));
+					String message = ChatColor.translateAlternateColorCodes('&', sndmsg);
+					if(jugadores[i].isOnline()){jugadores[i].getPlayer().sendMessage(message);}
+					List<String> getlist = getConfigPlayers.getStringList("listchunks." + nombre);
+					for(int c=0;c<getlist.size();c++){
+						getlist.get(c);
+						int chunkx = getConfigPlayers.getInt("teleport." + getlist.get(c) + ".xchunk");
+						int chunkz = getConfigPlayers.getInt("teleport." + getlist.get(c) + ".zchunk");
+						String world = getConfigPlayers.getString("teleport." + getlist.get(c) + ".world");
+						getConfigPlayers.set("listchunks." + nombre, "");
+						getConfigPlayers.set("teleport." + getlist.get(c), "");
+						if(landlords.contains(nombre)){landlords.remove(nombre);}
+						getConfigPlayers.set("landlords",landlords);
+						getConfigBlocks.set(getServer().getWorld(world).getName()+"."+String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
+						getConfigPlayers.set("counter." + nombre, 0);
+						try {getConfigBlocks.save(blockfile);} catch (IOException e) {}
+						try {getConfigPlayers.save(playerfile);} catch (IOException e) {}
+					}}
+				if(econ.getBalance(jugadores[i]) > getConfig().getInt("tax.amount")*val && !jugadores[i].getPlayer().hasPermission("chunkprotector.nopay")){
+						econ.withdrawPlayer(jugadores[i], getConfig().getInt("tax.amount")*val);
+						String sndmsg = getConfig().getString("messages.taxcollect").replace("AMOUNT", String.valueOf(getConfig().getInt("tax.amount")*val));
+						String message = ChatColor.translateAlternateColorCodes('&', sndmsg);
+						if(jugadores[i].isOnline()){jugadores[i].getPlayer().sendMessage(message);}
+				}}}}
 @EventHandler
 public void noplace(BlockPlaceEvent e){
 	if(e.isCancelled()){return;}
@@ -332,6 +379,22 @@ public void blockprotecttnt(EntityExplodeEvent e){
 public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 	if(sender instanceof Player){
 		Player p = (Player)sender;
+		if(command.getName().equalsIgnoreCase("landtax")){
+			if(args.length==0){
+				//p.sendMessage("Current time: "+p.getWorld().getTime());
+				//List<?> landlords=getConfigPlayers.getList("landlords");
+				//for(int i=0;landlords.size()>i;i++){
+					//try {Thread.sleep(60000);} catch (InterruptedException e) {p.sendMessage("no work timer");}
+					//p.sendMessage("Current time: "+p.getWorld().getTime());
+				//if(p.isOp()){
+				//getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+				//	@Override 
+				//	public void run() {taxes();}}, 60, getConfig().getInt("tax.time"));p.sendMessage("Starting the tax charges to all landlords");}	
+				//}
+				
+				return true;
+			}return false;
+		}
 		if(command.getName().equalsIgnoreCase("landclaim")){		
 			if(args.length == 1){	
 				String disworlds=p.getWorld().getWorldFolder().toString().replace("./", "");	
@@ -342,7 +405,7 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 					p.sendMessage(message);return true;}
 				int chunkx = p.getLocation().getChunk().getX();
 				int chunkz = p.getLocation().getChunk().getZ();
-				String jefaso = getConfigBlocks.getString("chunk." + String.valueOf(chunkx) + "." + String.valueOf(chunkz)+".owner");
+				String jefaso = getConfigBlocks.getString(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(chunkx) + "." + String.valueOf(chunkz)+".owner");
 				if(jefaso == null){
 						int max = 0;
 						for(int i=0;i<30;i++){if(p.hasPermission("chunkprotector."+i)){max = i;}}
@@ -353,9 +416,12 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 							String sndmsg = getConfig().getString("messages.reachlimitchunk").replace("PLAYER", p.getName());
 							String message = ChatColor.translateAlternateColorCodes('&', sndmsg);
 							p.sendMessage(message);return true;}
+						if(econ.getBalance(p)<getConfig().getInt("claim.cost") && !p.hasPermission("chunkprotector.nopay")){p.sendMessage("you do not have enougth money.");return true;}
 						String nombre = getConfigPlayers.getString("teleport." + args[0] + ".name");
 						String tpchunk = getConfigPlayers.getString("teleport." + args[0] + ".owner", "");
 						if(tpchunk.isEmpty()){
+							if(!p.hasPermission("chunkprotector.nopay")){
+							econ.withdrawPlayer(p, getConfig().getDouble("claim.cost"));}
 						getConfigPlayers.set("counter." + p.getPlayer().getName(), registradas + 1);
 						getConfigPlayers.set("teleport." + args[0] + ".x", p.getLocation().getBlockX());
 						getConfigPlayers.set("teleport." + args[0] + ".y", p.getLocation().getBlockY());
@@ -365,6 +431,8 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 						getConfigPlayers.set("teleport." + args[0] + ".owner", p.getName());
 						getConfigPlayers.set("teleport." + args[0] + ".name", args[0]);
 						getConfigPlayers.set("teleport." + args[0] + ".world", p.getWorld().getWorldFolder().toString().replace("./", ""));
+						List<String> getlist2 = getConfigPlayers.getStringList("landlords");
+						if(!getlist2.contains(p.getName())){getlist2.add("" + p.getName());getConfigPlayers.set("landlords", getlist2);} 
 						List<String> getlist = getConfigPlayers.getStringList("listchunks." + p.getName());
 						getlist.add("" + args[0]);
 						getConfigPlayers.set("listchunks." + p.getName(), getlist); 
@@ -376,10 +444,11 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 						getConfigBlocks.set(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(chunkx) + "." + String.valueOf(chunkz)+".chunkname", args[0]);
 						try {getConfigBlocks.save(blockfile);} catch (IOException e) {}
 						try {getConfigPlayers.save(playerfile);} catch (IOException e) {}
-					p.getPlayer().sendMessage(ChatColor.GREEN + "This chunk is now yours");
+						p.getPlayer().sendMessage(ChatColor.GREEN + "This chunk is now yours.");
+						if(!p.hasPermission("chunkprotector.nopay")){p.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "Remember to pay "+getConfig().getInt("tax.amount")+" tax rent per claim.");}
 					return true;}
 					if(!nombre.isEmpty()){if(nombre.equals(args[0])){p.sendMessage(ChatColor.DARK_RED  + nombre + " is claimed by " + tpchunk);}}}
-				if(!jefaso.equals("")){if(jefaso.equals(p.getPlayer().getName())){p.getPlayer().sendMessage(ChatColor.YELLOW + "This chunk is already yours");}	
+				if(jefaso != null){if(jefaso.equals(p.getPlayer().getName())){p.getPlayer().sendMessage(ChatColor.YELLOW + "This chunk is already yours");}	
 				if(!jefaso.equals(p.getPlayer().getName())){p.getPlayer().sendMessage(ChatColor.DARK_RED + "This chunk is taken by " + jefaso + ".");}}
 				return true;}return false;}
 		if(command.getName().equalsIgnoreCase("landunclaim")){
@@ -394,12 +463,17 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 						String tpchunk = getConfigPlayers.getString("teleport." + args[0] + ".owner", "");
 						if(tpchunk.equals(p.getName())){
 						int contar = getConfigPlayers.getInt("counter." + p.getPlayer().getName());
-						getConfigPlayers.set("teleport." + args[0], "");
+						getConfigPlayers.set("teleport." + args[0], null);
 						List<String> getlist = getConfigPlayers.getStringList("listchunks." + p.getName());
 						if(getlist.contains(args[0])){getlist.remove(args[0]);}
 						getConfigPlayers.set("listchunks." + p.getName(), getlist);
-						getConfigBlocks.set(p.getWorld().getWorldFolder().toString().replace("./", "")+"."+String.valueOf(chunkx) + "." + String.valueOf(chunkz), "");
+						getConfigBlocks.set(p.getWorld().getWorldFolder().toString().replace("./", "")+"."+String.valueOf(chunkx) + "." + String.valueOf(chunkz), null);
 						getConfigPlayers.set("counter." + p.getPlayer().getName(), contar -1);
+						if(contar == 1){
+							List<String> getlist2 = getConfigPlayers.getStringList("landlords");
+							getlist2.remove("" + p.getName());
+							getConfigPlayers.set("landlords", getlist2); 
+						}
 						try {getConfigPlayers.save(playerfile);} catch (IOException e) {}
 						try {getConfigBlocks.save(blockfile);} catch (IOException e) {}
 						p.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "Chunk successfuly removed.");}}
@@ -422,19 +496,18 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 						p.sendMessage(message);	
 					}}}return true;}return false;}
 		if(command.getName().equalsIgnoreCase("landtpset")){
-			if(args.length == 1){
-				String owner = getConfigPlayers.getString("teleport."+args[0]+".owner");
-				if(getConfigPlayers.getString("teleport."+args[0]) == null){p.sendMessage(args[0]+" is not claimed.");return true;}
-				if(!owner.equals(p.getName())){p.sendMessage("the land "+args[0]+" is not yours.");return true;}
-				String world = getConfigPlayers.getString("teleport."+args[0]+".world");
+			if(args.length == 0){
 				int chunkx = p.getLocation().getChunk().getX();
 				int chunkz = p.getLocation().getChunk().getZ();
-				String jefaso = getConfigBlocks.getString(world+"." + String.valueOf(chunkx) + "." + String.valueOf(chunkz)+".chunkname");
-				if(jefaso == null){p.sendMessage("you need to be inside "+args[0]);return true;}
-				if(!jefaso.equals(args[0])){p.sendMessage("you need to be inside "+args[0]);return true;}
-				getConfigPlayers.set("teleport." + args[0] + ".x",p.getLocation().getX());
-				getConfigPlayers.set("teleport." + args[0] + ".y",p.getLocation().getY());
-				getConfigPlayers.set("teleport." + args[0] + ".z",p.getLocation().getZ());
+				String jefaso = getConfigBlocks.getString(p.getWorld().getName()+"." + String.valueOf(chunkx) + "." + String.valueOf(chunkz)+".chunkname");
+				String owner = getConfigPlayers.getString("teleport."+jefaso+".owner");
+				if(getConfigPlayers.getString("teleport."+jefaso) == null){p.sendMessage(jefaso+" is not claimed.");return true;}
+				if(!owner.equals(p.getName())){p.sendMessage("the land "+jefaso+" is not yours.");return true;}
+				if(jefaso == null){p.sendMessage("you need to be inside "+jefaso);return true;}
+				if(!jefaso.equals(jefaso)){p.sendMessage("you need to be inside "+jefaso);return true;}
+				getConfigPlayers.set("teleport." + jefaso + ".x",p.getLocation().getX());
+				getConfigPlayers.set("teleport." + jefaso + ".y",p.getLocation().getY());
+				getConfigPlayers.set("teleport." + jefaso + ".z",p.getLocation().getZ());
 				p.sendMessage(ChatColor.GREEN+"new teleport point set");
 				try {getConfigPlayers.save(playerfile);} catch (IOException e) {e.printStackTrace();}
 				return true;
@@ -517,6 +590,11 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 					getConfigPlayers.set("counter." + args[1], compradorcount + 1);
 					getConfigPlayers.set("counter." + p.getName(), vendedorcount - 1);
 					getConfigPlayers.set("teleport." + args[0] + ".owner", args[1]);
+					List<String> getlist3 = getConfigPlayers.getStringList("landlords");
+					getlist3.remove("" + p.getName());
+					if(!getlist3.contains(args[1])){getlist3.add(""+args[1]);}
+					if(!getlist3.contains(p.getName()) && vendedorcount >=2){getlist3.add(""+p.getName());}
+					getConfigPlayers.set("landlords", getlist3);
 					int chunkx=getConfigPlayers.getInt("teleport."+args[0]+".xchunk");
 					int chunkz=getConfigPlayers.getInt("teleport."+args[0]+".zchunk");
 					getConfigBlocks.set(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(chunkx) + "." + String.valueOf(chunkz)+".owner", args[1]);

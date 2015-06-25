@@ -18,8 +18,10 @@
 	PERMISSIONS	DESCRIPTION	
 	chunkprotector.1 2 3 4 5 6 7 8 till 30	(default 3) how much chunks can a player claim	
 	chunkprotector.unlimited	(default to op)to set a player to unlimited chunks	
-	chunkprotector.bypass	(default to op)player with this permission will can use break build and more on claimed chunks	
-	chunkprotector.nobuild	(default false) this will set that player so he only can build inside his claims	
+	chunkprotector.bypass	(default to op)player with this permission will can use break 
+	build and more on claimed chunks	
+	chunkprotector.nobuild	(default false) this will set that player so he only can 
+	build inside his claims	
 	chunkprotector.nobreak	(default false)	
 	chunkprotector.nopay	(default op) player with this permission will not pay claim cost or taxes
 

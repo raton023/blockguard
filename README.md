@@ -1,7 +1,7 @@
 # Landlord v17
 
 	COMMANDS	DESCRIPTION	
-1	/landclaim <landname>	Claim a chunk.	
+	/landclaim <landname>	Claim a chunk.	
 2	/landunclaim <landname>	Unclaim a chunk.	
 3	/landallow <friend>	add a player to your lands.	
 4	/landdisallow <friend>	remove a player from your lands.	

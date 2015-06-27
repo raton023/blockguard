@@ -1,6 +1,6 @@
 name: Landlord
 main: com.craftilandia.chunkprotector.Main
-version: 17.0
+version: 21.0
 author: raton023
 website: http://dev.bukkit.org/bukkit-plugins/blockguard/
 softdepend: [Vault]

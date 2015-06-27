@@ -16,7 +16,7 @@ commands:
         usage: /landallow <playername> ej. /landallow raton023
     landallowlist:
         description: See your friends list.
-        usage: /landallowlist ej. /landallowlist
+        usage: /landallowlist <player> ej. /landallowlist raton023
     landlist:
         description: See a player land list.
         usage: /landlist <playername> ej. /landlist raton023

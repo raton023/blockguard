@@ -1,6 +1,6 @@
 name: Landlord
 main: com.craftilandia.chunkprotector.Main
-version: 21.0
+version: 22.0
 author: raton023
 website: http://dev.bukkit.org/bukkit-plugins/blockguard/
 softdepend: [Vault]
@@ -25,7 +25,7 @@ commands:
         usage: /landtp <landname> ej. /landtp spawn
     landtpset:
         description: Set the teleport to where you stand.
-        usage: /landtpset <landname> ej. /landtpset spawn
+        usage: /landtpset ej. /landtpset
     landgive:
         description: Give a land to a player.
         usage: /landgive <landname> <player> ej. /landtp spawn raton023
@@ -41,13 +41,16 @@ commands:
     landtax:
         description: Charge landlords.
         usage: /landtax
+    landadminclaimspawn:
+        description: Claim the spawn area, this will override all the claims inside.
+        usage: /landadminclaimspawn <# blocks> ej. /landadminclaimspawn 40
 permissions:
     chunkprotector.unlimited:
         description: To have unlimited chunks claims.
         default: op
     chunkprotector.admin:
-        description: To run commands as another players(working on this).
-        default: false
+        description: To run admin commands. ex. /landunclaim <landname> or charge tax to landlores.
+        default: op
     chunkprotector.bypass:
         description: to bypass all the protections.
         default: op
@@ -61,5 +64,5 @@ permissions:
         description: if player can not break outside of a registered chunk.
         default: false
     chunkprotector.nopay:
-        description: if player have this he will not pay for taxes or claim costs.
+        description: if player have this he will no pay for taxes or claim costs.
         default: op

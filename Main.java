@@ -44,11 +44,12 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements Listener {
-	File playerfile = new File(getDataFolder(), "playerinfo.yml");
-	FileConfiguration getConfigPlayers = YamlConfiguration.loadConfiguration(playerfile);
-	File blockfile = new File(getDataFolder(), "blockinfo.yml");
-	FileConfiguration getConfigBlocks = YamlConfiguration.loadConfiguration(blockfile);
-    public static Economy econ = null;
+
+        File playerfile = new File(getDataFolder(), "playerinfo.yml");
+        FileConfiguration getConfigPlayers = YamlConfiguration.loadConfiguration(playerfile);
+        File blockfile = new File(getDataFolder(), "blockinfo.yml");
+        FileConfiguration getConfigBlocks = YamlConfiguration.loadConfiguration(blockfile);
+        public static Economy econ = null;
 @Override
 public void onEnable() {
 	if(!setupEconomy()){getServer().getLogger().severe(String.format("[%s] - ERROR No Vault dependency found!", getDescription().getName()));return;}
@@ -67,10 +68,15 @@ private boolean setupEconomy() {if (getServer().getPluginManager().getPlugin("Va
     return econ != null;}
 @EventHandler
 public void nobreak(BlockBreakEvent e){
+	if(e.getBlock().getX() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getBlock().getX() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getBlock().getZ() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getBlock().getZ() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+		if(!e.getPlayer().isOp())e.setCancelled(true);return;
+	}
 	if(e.isCancelled()){return;}
+	
 	String owner = getConfigBlocks.getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ())+".owner");
 	List<?> friend = getConfigPlayers.getList("friends." + owner);	
 	if(owner == null){
+		if(e.getPlayer().hasPermission("chunkprotector.nofuckme")){e.setCancelled(false);return;}
 		if(e.getPlayer().hasPermission("chunkprotector.nobreak")){e.getPlayer().sendMessage(ChatColor.DARK_PURPLE+"you do not have permission to break.");e.setCancelled(true);return;}
 		if(!e.getPlayer().hasPermission("chunkprotector.nobreak")){e.setCancelled(false);return;}
 	}
@@ -123,10 +129,14 @@ public void nobreak(BlockBreakEvent e){
 				}}}}
 @EventHandler
 public void noplace(BlockPlaceEvent e){
+	if(e.getBlock().getX() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getBlock().getX() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getBlock().getZ() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getBlock().getZ() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+		if(!e.getPlayer().isOp())e.setCancelled(true);return;
+	}
 	if(e.isCancelled()){return;}
 	String owner = getConfigBlocks.getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ())+".owner", "");
 	List<?> friend = getConfigPlayers.getList("friends." + owner);	
 	if(owner == null){
+		if(e.getPlayer().hasPermission("chunkprotector.nofuckme")){e.setCancelled(false);return;}
 		if(e.getPlayer().hasPermission("chunkprotector.nobuild")){e.getPlayer().sendMessage(ChatColor.DARK_PURPLE+"you do not have permission to build.");e.setCancelled(true);return;}
 		if(!e.getPlayer().hasPermission("chunkprotector.nobuild")){e.setCancelled(false);return;}
 	}
@@ -160,6 +170,9 @@ Material b = e.getClickedBlock().getType();
 		if(owner.equals(e.getPlayer().getName()) || friend.contains(e.getPlayer().getName()) || e.getPlayer().hasPermission("chunkprotector.bypass")){e.setCancelled(false);}}}}
 @EventHandler
 public void nobaldesponer(PlayerBucketEmptyEvent e){
+	if(e.getBlockClicked().getX() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getBlockClicked().getX() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getBlockClicked().getZ() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getBlockClicked().getZ() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+		if(!e.getPlayer().isOp())e.setCancelled(true);return;
+	}
 	if(e.isCancelled()){return;}
 String owner = getConfigBlocks.getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getBlockClicked().getChunk().getX()) + "." + String.valueOf(e.getBlockClicked().getChunk().getZ())+".owner", "");
 List<?> friend = getConfigPlayers.getList("friends." + owner);	
@@ -174,6 +187,9 @@ if(owner.equals(e.getPlayer().getName()) || friend.contains(e.getPlayer().getNam
 
 @EventHandler
 public void nobaldestomar(PlayerBucketFillEvent e){
+	if(e.getBlockClicked().getX() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getBlockClicked().getX() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getBlockClicked().getZ() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getBlockClicked().getZ() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+		if(!e.getPlayer().isOp())e.setCancelled(true);return;
+	}
 	if(e.isCancelled()){return;}
 String owner = getConfigBlocks.getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getBlockClicked().getChunk().getX()) + "." + String.valueOf(e.getBlockClicked().getChunk().getZ())+".owner", "");
 List<?> friend = getConfigPlayers.getList("friends." + owner);	
@@ -223,6 +239,9 @@ public void damage(EntityDamageByEntityEvent e){
 	if (e.getEntity() instanceof ItemFrame) {
 		if (e.getDamager() instanceof Player) {
 			Player p = (Player)e.getDamager();
+			if(e.getEntity().getLocation().getX() > getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getEntity().getLocation().getX() < getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getEntity().getLocation().getZ() > getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getEntity().getLocation().getZ() < getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+				if(!p.isOp())e.setCancelled(true);return;
+			}
 			String owner = getConfigBlocks.getString(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ())+".owner", "");
 			List<?> friend = getConfigPlayers.getList("friends." + owner);	
 			if(!owner.equals("")){
@@ -238,6 +257,9 @@ public void damage(EntityDamageByEntityEvent e){
 						e.setCancelled(true);}}
 if(e.getEntity() instanceof ArmorStand){
 	Player p = (Player)e.getDamager();
+	if(e.getEntity().getLocation().getX() > getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getEntity().getLocation().getX() < getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getEntity().getLocation().getZ() > getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getEntity().getLocation().getZ() < getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+		if(!p.isOp())e.setCancelled(true);return;
+	}
 	String owner = getConfigBlocks.getString(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ())+".owner", "");
 	List<?> friend = getConfigPlayers.getList("friends." + owner);	
 	if(!owner.equals("")){
@@ -254,6 +276,9 @@ if(e.getEntity() instanceof ArmorStand){
 public void crearcartel(HangingPlaceEvent e){
 	if(e.isCancelled()){return;}
 	Player p = e.getPlayer();
+	if(e.getEntity().getLocation().getX() > getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getEntity().getLocation().getX() < getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getEntity().getLocation().getZ() > getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getEntity().getLocation().getZ() < getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+		if(!e.getPlayer().isOp())e.setCancelled(true);return;
+	}
 	String owner = getConfigBlocks.getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ())+".owner", "");
 	List<?> friend = getConfigPlayers.getList("friends." + owner);	
 	if(!owner.equals("")){
@@ -271,6 +296,9 @@ public void rompercartel(HangingBreakByEntityEvent e){
 	if(e.isCancelled()){return;}
 	if(e.getRemover() instanceof Player){
 	Player p = (Player) e.getRemover();
+	if(e.getEntity().getLocation().getX() > getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getEntity().getLocation().getX() < getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getEntity().getLocation().getZ() > getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getEntity().getLocation().getZ() < getConfigBlocks.getDouble(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+		if(!p.isOp())e.setCancelled(true);return;
+	}
 	String owner = getConfigBlocks.getString(p.getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getEntity().getLocation().getBlock().getChunk().getZ())+".owner", "");
 	List<?> friend = getConfigPlayers.getList("friends." + owner);	
 	if(!owner.equals("")){
@@ -304,6 +332,9 @@ public void armorstand(PlayerInteractAtEntityEvent e){
 	if(e.isCancelled()){return;}
 	if(e.getRightClicked() instanceof ArmorStand){
 		if(e.getPlayer() instanceof Player){
+			if(e.getRightClicked().getLocation().getX() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getRightClicked().getLocation().getX() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getRightClicked().getLocation().getZ() > getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getRightClicked().getLocation().getZ() < getConfigBlocks.getDouble(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+				if(!e.getPlayer().isOp())e.setCancelled(true);return;
+			}
 		String owner = getConfigBlocks.getString(e.getPlayer().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getRightClicked().getLocation().getBlock().getChunk().getX()) + "." + String.valueOf(e.getRightClicked().getLocation().getBlock().getChunk().getZ())+".owner", "");
 		List<?> friend = getConfigPlayers.getList("friends." + owner);	
 		if(!owner.equals("")){
@@ -318,7 +349,7 @@ public void armorstand(PlayerInteractAtEntityEvent e){
 
 @EventHandler
 public void empujapistones(BlockPistonExtendEvent e){
-	if(e.isCancelled()){return;}
+	if(e.isCancelled()){return;}//agregar spawn protection
 	for(Block movidos : e.getBlocks()){
 		String mov = getConfigBlocks.getString(e.getBlock().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(movidos.getChunk().getX()) + "." + String.valueOf(movidos.getChunk().getZ())+".owner", "");
 if(!mov.isEmpty()){if(movidos.getChunk() != e.getBlock().getChunk()){
@@ -327,6 +358,9 @@ if(!mov.isEmpty()){if(movidos.getChunk() != e.getBlock().getChunk()){
 @EventHandler
 public void incendio(BlockBurnEvent e){
 	if(e.isCancelled()){return;}
+	if(e.getBlock().getLocation().getX() > getConfigBlocks.getDouble(e.getBlock().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xa") && e.getBlock().getLocation().getX() < getConfigBlocks.getDouble(e.getBlock().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.xb") && e.getBlock().getLocation().getZ() > getConfigBlocks.getDouble(e.getBlock().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.za") && e.getBlock().getLocation().getZ() < getConfigBlocks.getDouble(e.getBlock().getWorld().getWorldFolder().toString().replace("./", "")+".spawn.zb")){
+		e.setCancelled(true);return;
+	}
 	String owner = getConfigBlocks.getString(e.getBlock().getWorld().getWorldFolder().toString().replace("./", "")+"." + String.valueOf(e.getBlock().getChunk().getX()) + "." + String.valueOf(e.getBlock().getChunk().getZ())+".owner", "");
 if(owner.isEmpty()){
 e.setCancelled(false);}
@@ -396,6 +430,30 @@ public boolean onCommand(CommandSender sender, Command command, String label, St
 				}
 			}
 		}
+		if(command.getName().equalsIgnoreCase("landadminclaimspawn")){
+			if(args.length == 1){
+				if(!p.hasPermission("chunkprotector.admin")){p.sendMessage("this command is for admins only");return true;}
+				double val= Double.parseDouble(args[0]);
+				double x1=p.getLocation().getX()-val;
+				double x2=p.getLocation().getX()+val;
+				double z1=p.getLocation().getZ()-val;
+				double z2=p.getLocation().getZ()+val;
+				getConfigBlocks.set(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn."+"xa",x1);
+				getConfigBlocks.set(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn."+"xb",x2);
+				getConfigBlocks.set(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn."+"za",z1);
+				getConfigBlocks.set(p.getWorld().getWorldFolder().toString().replace("./", "")+".spawn."+"zb",z2);
+				getConfigPlayers.set("teleport.spawn.x", p.getPlayer().getLocation().getX());
+				getConfigPlayers.set("teleport.spawn.y", p.getPlayer().getLocation().getY());
+				getConfigPlayers.set("teleport.spawn.z", p.getPlayer().getLocation().getZ());
+				getConfigPlayers.set("teleport.spawn.owner", p.getName());
+				getConfigPlayers.set("teleport.spawn.name", "spawn");
+				getConfigPlayers.set("teleport.spawn.world", p.getWorld().getWorldFolder().toString().replace("./", ""));
+				
+				try {getConfigBlocks.save(blockfile);} catch (IOException e1) {e1.printStackTrace();}
+				try {getConfigPlayers.save(playerfile);} catch (IOException e) {e.printStackTrace();}
+				p.sendMessage(ChatColor.YELLOW+args[0]+" spawn claimed successfully.");
+				return true;}return false;}
+		
 		if(command.getName().equalsIgnoreCase("landtax")){
 			if(args.length==0){
 				if(p.isOp() || p.hasPermission("chunkprotector.admin")){
